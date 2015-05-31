@@ -1,4 +1,5 @@
-include("config.lua")
+AddCSLuaFile()
+include("autorun/pure_config.lua")
 if ( SERVER ) then
     AddCSLuaFile("autorun/client/cl_loading.lua");
     util.AddNetworkString("CloseLoadingScreen")
@@ -29,13 +30,13 @@ if ( SERVER ) then
 
                 end
 
-                if retourTable["reputation"] < 80 then
+                if (retourTable["reputation"] < PURE.minauthorisedrep) and (retourTable["reputation"] >  PURE.maxauthorisedrep) then
                     ply:Kick("Your reputation is too low, bad boy")
                     file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" .. os.date().."\tConnexion of Player : "..ply:Name().." with Steamid : "..steamid.." failed, his reputation is to low !")
 
                 end
 
-                if retourTable["reputationrp"] != "new" and retourTable["reputationrp"] < 80 then
+                if (retourTable["reputationrp"] != "new") and (retourTable["reputationrp"] < PURE.minauthorisatedrprep) and (retourTable["reputationrp"] > PURE.maxauthorisatedrprep)  then
                     ply:Kick("Your RolePlay reputation is too low for this server")
                     file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" .. os.date().."\tConnexion of Player : "..ply:Name().." with Steamid : "..steamid.." failed, his Roleplay reputation is to low !")
                 end
