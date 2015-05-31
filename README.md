@@ -1,13 +1,13 @@
 # Pure System Addons
-Ce répo concerne uniquement les parties serveur du Pure System, la partie Web et l'API sont maintenant développées en privé. Il s'agit la de la version de l'addon qui est installée sur les serveurs membres du Pure System.
+Ce répo concerne uniquement les parties serveur du Pure System, la partie Web et l'API sont maintenant développées en privé. Il s'agit là de la version de l'addon qui est installée sur les serveurs membres du Pure System.
 
 ### Utilisation
 
-L'utilisation du Pure System et de sa partie serveur est soumise a condition, renseignez vous sur [PureSystem.fr](http://puresystem.fr/about/) ou contactez directement [MisterTakaashi](http://steamcommunity.com/id/TakaashiKun/) ou [Achild0](http://steamcommunity.com/id/Achild0/) pour obtenir d'autres informations.
+L'utilisation du Pure System et de sa partie serveur est soumise à conditions, renseignez vous sur [PureSystem.fr](http://puresystem.fr/about/) ou contactez directement [MisterTakaashi](http://steamcommunity.com/id/TakaashiKun/) ou [Achild0](http://steamcommunity.com/id/Achild0/) pour obtenir d'autres informations.
 
 ### Jeux concernés
 
-Voici la liste des jeux concernés par le Pure System, elle est amenée a évoluer selon l'intéret que portent les serveurs RolePlay au System.
+Voici la liste des jeux concernés par le Pure System, elle est amenée à évoluer selon l'intéret que portent les serveurs RolePlay au System.
 
 - Garry's Mod
 
