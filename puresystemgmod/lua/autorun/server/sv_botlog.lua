@@ -1,6 +1,6 @@
 
 print("Start of the Pure Bot !")
-PureLog = "puresystem/log/"..os.date("%d_%m_%Y")..".txt"
+PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
 if !file.IsDir("puresystem","DATA") then
 	file.CreateDir("puresystem")

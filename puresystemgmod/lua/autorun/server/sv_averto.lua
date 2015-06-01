@@ -2,7 +2,7 @@ util.AddNetworkString( "averto" )
 util.AddNetworkString( "kickto" )
 util.AddNetworkString( "banto" )
 
-local PureLog = "puresystem/log/"..os.date("%d_%m_%Y")..".txt"
+local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
 net.Receive( "averto", function( len, ply )
     addAverto( ply, net.ReadEntity(), net.ReadString() ,net.ReadInt( 4 ),net.ReadBool() )

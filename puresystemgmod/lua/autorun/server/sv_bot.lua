@@ -1,6 +1,6 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
-local PureLog = "puresystem/log/"..os.date("%d_%m_%Y")..".txt"
+local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 if ( SERVER ) then
     AddCSLuaFile("autorun/client/cl_loading.lua");
     util.AddNetworkString("CloseLoadingScreen")
