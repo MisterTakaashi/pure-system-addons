@@ -5,17 +5,16 @@ PureLog = "puresystem/log/"..os.date("%d_%m_%Y")..".txt"
 if !file.IsDir("puresystem","DATA") then
 	file.CreateDir("puresystem")
 	file.CreateDir("puresystem/log")
-	file.CreateDir("puresystem/plycache")
-	file.Write(PureLog, os.date().."First start of Pure bot !")
+	file.Write(PureLog, os.date().."Premier demarrage du Pure Bot sur ce serveur ! GG !")
 	print("***Log file created***" )
 
-	
+
 else
-	if !PureLog then
-		file.Write(PureLog,os.date().."\tFirst Pure Bot Start today.")
+	if file.Exists(PureLog, "DATA" ) == false then
+		file.Write(PureLog,os.date().."\tPremier demarrage du Pure Bot aujourd'hui.")
 		print("***Log system launched***" )
 	else
-		file.Append(PureLog,"\n"..os.date().."\tPure Bot Started.")
+		file.Append(PureLog,"\n"..os.date().."\tDemarrage du Pure Bot.")
 		print("***Log system launched***" )
 	end
 

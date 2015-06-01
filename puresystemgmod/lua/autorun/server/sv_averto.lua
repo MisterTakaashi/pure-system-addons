@@ -2,6 +2,8 @@ util.AddNetworkString( "averto" )
 util.AddNetworkString( "kickto" )
 util.AddNetworkString( "banto" )
 
+local PureLog = "puresystem/log/"..os.date("%d_%m_%Y")..".txt"
+
 net.Receive( "averto", function( len, ply )
     addAverto( ply, net.ReadEntity(), net.ReadString() ,net.ReadInt( 4 ),net.ReadBool() )
 end )
@@ -31,6 +33,7 @@ function addAverto(admin, target, detail, sev, rp)
         print("[PS] Impossible de contacter le serveur Pure System...")
     end
     );
+    file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..target:Name().." avec le SteamID : "..target:SteamID().." a recu un Avertissement par : "..admin:Nick())
 end
 
 function addKickto(admin, target, raison, sev, rp)
@@ -42,6 +45,7 @@ function addKickto(admin, target, raison, sev, rp)
         for k, ply in pairs( player.GetAll() ) do
         	ply:ChatPrint("[PS] " .. admin:Nick().." vient kicker "..target:Nick()..". Raison : "..raison)
         end
+        file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..target:Name().." avec le SteamID : "..target:SteamID().." a ete Kick du serveur par : "..admin:Nick())
         target:Kick("Kick par administrateur\nRaison: " .. raison)
     end,
     function( error )
@@ -70,6 +74,7 @@ function addBanto(admin, target, raison, sev, temp, rp)
         print("[PS] Impossible de contacter le serveur Pure System...")
     end
     );
+    file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..target:Name().." avec le SteamID : "..target:SteamID().." a ete Banni du serveur par : "..admin:Nick())
 end
 
 function getNewreput(target)

@@ -20,7 +20,7 @@ PURE = {}
 	*/
 
 	/* Vous pouvez ajouter des groupes pouvant ouvrir le PureSystem !
-		 n'oubliez pas de mettre le nom exacte du groupe entre '' et avec une "," à la fin ! ^_^
+	 n'oubliez pas de mettre le nom exact du groupe entre '' et avec une "," à la fin (sauf au dernier) !  ^_^
 	*/
 	PURE.authgrp = {
 		'superadmin',

@@ -1,5 +1,6 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
+local PureLog = "puresystem/log/"..os.date("%d_%m_%Y")..".txt"
 if ( SERVER ) then
     AddCSLuaFile("autorun/client/cl_loading.lua");
     util.AddNetworkString("CloseLoadingScreen")
@@ -20,25 +21,23 @@ if ( SERVER ) then
 
                 if retourTable["reputationrp"] != "new" then
 				                ply:SetNWInt('reputationrp',retourTable["reputationrp"])
-                        file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n".. os.date().."\tConnexion of Player : "..ply:Name().." with Steamid : "..steamid.." failed, he was banned from the server !")
-
                 end
 
                 if retourTable["banned"] == true then
                     ply:Kick("Vous avez été banni de ce serveur, take time to think\nRaison: "..retourTable["raison"])
-                    file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n".. os.date().."\tConnexion of Player : "..ply:Name().." with Steamid : "..steamid.." failed, he was banned from the server !")
+                    file.Append(PureLog,"\n".. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, il a ete ban du serveur !")
 
                 end
 
                 if (retourTable["reputation"] < PURE.minauthorisedrep) and (retourTable["reputation"] >  PURE.maxauthorisedrep) then
-                    ply:Kick("Your reputation is too low, bad boy")
-                    file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" .. os.date().."\tConnexion of Player : "..ply:Name().." with Steamid : "..steamid.." failed, his reputation is to low !")
+                    ply:Kick("Votre Reputation ne convient pas a ce serveur")
+                    file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa reputation ne convenait pas !")
 
                 end
 
                 if (retourTable["reputationrp"] != "new") and (retourTable["reputationrp"] < PURE.minauthorisatedrprep) and (retourTable["reputationrp"] > PURE.maxauthorisatedrprep)  then
-                    ply:Kick("Your RolePlay reputation is too low for this server")
-                    file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" .. os.date().."\tConnexion of Player : "..ply:Name().." with Steamid : "..steamid.." failed, his Roleplay reputation is to low !")
+                    ply:Kick("Votre Reputation Roleplay ne convient pas a ce serveur")
+                    file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa Reputation Roleplay ne convenait pas !")
                 end
 
                 net.Start("CloseLoadingScreen")
@@ -49,7 +48,7 @@ if ( SERVER ) then
             function( error )
                 if error == true then
                     print("An error has been detected, data could not be retrieve")
-                    file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tAn error has been detected, please contact support team !")
+                    file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
                 end
             end
         );
@@ -62,14 +61,14 @@ if ( SERVER ) then
             local steamid64 = ply:SteamID64()
 
             connexionPlayer(pseudo, steamidArg, steamid64, ply)
-			file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt",
+			file.Append(PureLog,
 			"\n"..os.date().."\tConnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamid.." realisee avec succes !")
         end)
 	end)
 
 	hook.Add("PlayerDisconnected","Player_Disc",function(ply)
 		steamid = ply:SteamID()
-		file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt",
+		file.Append(PureLog,
 			"\n"..os.date().."\tDeconnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamid.." se deconnecte !")
 	end)
 end
