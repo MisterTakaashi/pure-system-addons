@@ -26,3 +26,5 @@ PURE = {}
 		'superadmin',
 		'admin'
 	}
+
+	PURE.port = 27015 -- IMPORTANT !!! --> Indiquez le port sur lequel tourne votre serveur habituellement c'est très IMPORTANT !!!
