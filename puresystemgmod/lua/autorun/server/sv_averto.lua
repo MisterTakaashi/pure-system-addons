@@ -1,6 +1,9 @@
+AddCSLuaFile()
+include("autorun/pure_config.lua")
 util.AddNetworkString( "averto" )
 util.AddNetworkString( "kickto" )
 util.AddNetworkString( "banto" )
+
 
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
@@ -24,7 +27,7 @@ function addAverto(admin, target, detail, sev, rp)
 
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
-    http.Fetch( "http://puresystem.fr/api/rest/avertissement.php?pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. detail .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
+    http.Fetch( "http://puresystem.fr/api/rest/avertissement.php?port= "..PURE.port.."pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. detail .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
     function( body, len, headers, code )
         print("[PS] Avertissement envoyé au serveur !")
         getNewreput(target)
@@ -39,7 +42,7 @@ end
 function addKickto(admin, target, raison, sev, rp)
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
-    http.Fetch( "http://puresystem.fr/api/rest/kick.php?pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
+    http.Fetch( "http://puresystem.fr/api/rest/kick.php?port="..Pure.port.."pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
     function( body, len, headers, code )
         print("[PS] Kick envoyé au serveur !")
         for k, ply in pairs( player.GetAll() ) do
@@ -62,7 +65,7 @@ function addBanto(admin, target, raison, sev, temp, rp)
 
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
-    http.Fetch( "http://puresystem.fr/api/rest/ban.php?pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."",
+    http.Fetch( "http://puresystem.fr/api/rest/ban.php?port="..PURE.port.."pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."",
     function( body, len, headers, code )
         print("[PS] Kick envoyé au serveur !")
         for k, ply in pairs( player.GetAll() ) do
@@ -78,7 +81,7 @@ function addBanto(admin, target, raison, sev, temp, rp)
 end
 
 function getNewreput(target)
-    http.Fetch( "http://puresystem.fr/api/rest/getinfos.php?pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64(),
+    http.Fetch( "http://puresystem.fr/api/rest/getinfos.php?port="..PURE.port.."pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64(),
     function( body, len, headers, code )
         TheReturnedHTML = body
         local retourTable = util.JSONToTable(TheReturnedHTML)
