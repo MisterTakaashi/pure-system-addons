@@ -9,7 +9,7 @@ if ( SERVER ) then
         -- print("Player data was successfully sended !")
         local TheReturnedHTML = ""
 
-        http.Fetch( "http://puresystem.fr/api/rest/connexion.php?port="..PURE.port.."pseudo="..pseudo.."&steamid="..steamid.."&steamid64="..steamid64,
+        http.Fetch( "http://puresystem.fr/api/rest/connexion.php?port="..PURE.port.."&pseudo="..pseudo.."&steamid="..steamid.."&steamid64="..steamid64,
             function( body, len, headers, code )
                 TheReturnedHTML = body
 
