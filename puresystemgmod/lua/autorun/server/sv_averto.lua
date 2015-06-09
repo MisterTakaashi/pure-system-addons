@@ -42,7 +42,7 @@ end
 function addKickto(admin, target, raison, sev, rp)
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
-    http.Fetch( "http://puresystem.fr/api/rest/kick.php?port="..Pure.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
+    http.Fetch( "http://puresystem.fr/api/rest/kick.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
     function( body, len, headers, code )
         print("[PS] Kick envoyé au serveur !")
         for k, ply in pairs( player.GetAll() ) do

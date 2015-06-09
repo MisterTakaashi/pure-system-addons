@@ -4,13 +4,15 @@ AddCSLuaFile()
 PURE = {}
 
 
-	PURE.minauthorisedrep = 75
+	PURE.minauthorisedrep = 75 // Minimum de reputation
 
-	PURE.maxauthorisedrep = 100
+	PURE.maxauthorisedrep = 100 // Maximum de reputation
 
-	PURE.minauthorisatedrprep = 50
+	PURE.minauthorisatedrprep = 50 // Minimum de reputation RP
 
-	PURE.maxauthorisatedrprep = 100
+	PURE.maxauthorisatedrprep = 100 // Maximum de reputation RP
+
+	PURE.authorisenewplayers = true //Authoriser les nouveaux joueurs
 	--------------------------------------------------------------------OnPeutToucher:D-----------------------------------------------------------
 	/* Ici vous touchez comme vous le voulez ,
 	c'est un fichier de config où vous pouvez changer les groupes pour le Pure System sur votre serveur par exemple !

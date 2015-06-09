@@ -36,13 +36,18 @@ if ( SERVER ) then
                 end
 
                 if (retourTable["reputation"] < PURE.minauthorisedrep) and (retourTable["reputation"] >  PURE.maxauthorisedrep) then
-                    ply:Kick("Votre Reputation ne convient pas a ce serveur")
+                    ply:Kick("Votre Reputation ne convient pas a ce serveur, elle doit être entre " .. PURE.minauthorisedrep .. " et " .. PURE.maxauthorisedrep)
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa reputation ne convenait pas !")
 
                 end
 
-                if (retourTable["reputationrp"] != "new") and (retourTable["reputationrp"] < PURE.minauthorisatedrprep) and (retourTable["reputationrp"] > PURE.maxauthorisatedrprep)  then
-                    ply:Kick("Votre Reputation Roleplay ne convient pas a ce serveur")
+                if (retourTable["reputationrp"] == "new") and (PURE.authorisenewplayers == false) then
+                    ply:Kick("Ce serveur n'accepte pas les joueurs n'ayant pas encore de réputation RP")
+                    file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, pas encore de Reputation RolePlay !")
+                end
+
+                if (retourTable["reputationrp"] != "new") and ((retourTable["reputationrp"] < PURE.minauthorisatedrprep) or (retourTable["reputationrp"] > PURE.maxauthorisatedrprep))  then
+                    ply:Kick("Votre Reputation Roleplay ne convient pas a ce serveur, elle doit être entre " .. PURE.minauthorisatedrprep .. " et " .. PURE.maxauthorisatedrprep)
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa Reputation Roleplay ne convenait pas !")
                 end
 
