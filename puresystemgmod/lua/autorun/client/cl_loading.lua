@@ -73,3 +73,11 @@ net.Receive("CloseLoadingScreen", function(length)
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Réputation RolePlay: " .. reputationrp);
 	end)
 end);
+
+net.Receive("CloseLoadingScreenErr", function(length)
+	timer.Simple(9, function()
+		ply = LocalPlayer();
+		base:Close()
+		chat.AddText( Color( 250, 0, 0 ), "[PS] Ce serveur n'est pas répertorié sur le Pure System");
+	end)
+end);

@@ -4,6 +4,7 @@ local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 if ( SERVER ) then
     AddCSLuaFile("autorun/client/cl_loading.lua");
     util.AddNetworkString("CloseLoadingScreen")
+    util.AddNetworkString("CloseLoadingScreenErr")
 
     local function connexionPlayer(pseudo, steamid, steamid64, ply)
         -- print("Player data was successfully sended !")
@@ -16,6 +17,11 @@ if ( SERVER ) then
                 -- print(TheReturnedHTML);
 
                 local retourTable = util.JSONToTable(TheReturnedHTML)
+                if retourTable["error"] != false then
+                  print("Le Serveur n'est pas répétorié dans le Pure System. Veuillez prendre contact avec le support : http://puresystem.fr")
+                  net.Start("CloseLoadingScreenErr")
+                  net.Send(ply)
+                  return end
                 print("PureSystem: Donnees du joueur " .. pseudo .. " chargees avec succes - Reputation: " .. retourTable["reputation"] .. ", Reputation RP: " .. retourTable["reputationrp"])
 				        ply:SetNWInt('reputation',retourTable["reputation"])
 
