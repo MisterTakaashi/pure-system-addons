@@ -56,7 +56,7 @@ net.Receive("OpenLoadingScreen", function(length)
 	msgpro:SetSize(ScrW(), 100)
 	msgpro.Paint = function(self,w,h)
 		draw.RoundedBox(0,0,0,w,h,Color(250, 250, 250, 255))
-		draw.DrawText( "Serveur protégé par le Pure System", "DermaLarge", w/2, h/2 - 10, Color(0, 71, 152, 255), TEXT_ALIGN_CENTER )
+		draw.DrawText( "Serveur protégé par PureSystem.fr", "DermaLarge", w/2, h/2 - 10, Color(0, 71, 152, 255), TEXT_ALIGN_CENTER )
 	end
 
 
