@@ -1,6 +1,7 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
 net.Receive("OpenLoadingScreen", function(length)
+	local closed = false
 
 	base = vgui.Create("DFrame")
 	base:SetPos(0,0)
@@ -59,13 +60,31 @@ net.Receive("OpenLoadingScreen", function(length)
 		draw.DrawText( "Serveur protégé par PureSystem.fr", "DermaLarge", w/2, h/2 - 10, Color(0, 71, 152, 255), TEXT_ALIGN_CENTER )
 	end
 
+	timer.Simple(9, function()
+		logpas = vgui.Create("DButton",base)
+		logpas:SetPos(ScrW() - 200,ScrH() - 100 )
+		logpas:SetSize(190, 50)
+		logpas:SetText("")
+		logpas.Paint = function(self,w,h)
+			draw.RoundedBox(0,0,0,w,h,Color(200,0,0,255))
+			draw.DrawText("Passer","Trebuchet24",w/2-5,10,Color(255,255,255,255),TEXT_ALIGN_CENTER)
+		end
+		logpas.DoClick = function()
+			base:Close()
+			closed = true
+			return closed
+		end
+	end)
+
 
 end);
 
 net.Receive("CloseLoadingScreen", function(length)
 	timer.Simple(9, function()
 		ply = LocalPlayer();
-		base:Close()
+		if closed == false then
+			base:Close()
+		end
 		local reputation = ply:GetNWInt('reputation');
 		local reputationrp = ply:GetNWInt('reputationrp', 'new');
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Chargement des données terminé, Bon jeu !");
