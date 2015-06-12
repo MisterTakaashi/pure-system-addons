@@ -36,6 +36,16 @@ local function addBanto(target,raison,sev,temp, rp)
 	net.SendToServer()
 end
 
+local function addBantoSteamID(target,raison,sev,temp, rp)
+	net.Start( "bantosteamid" )
+	net.WriteString( target )
+	net.WriteString( raison )
+	net.WriteInt( sev, 4 )
+	net.WriteFloat( temp )
+	net.WriteBool( rp )
+	net.SendToServer()
+end
+
 local function PurePanel()
 	local base = vgui.Create( "DFrame" )
 	base:Center()
@@ -905,6 +915,302 @@ local function PurePanel()
 	check.OnGetFocus = function()
 		check:SetText( "" )
 	end
+
+
+    local banSteamid = vgui.Create( "DButton" )
+	banSteamid:SetParent( base )
+	banSteamid:SetPos( 550, 450 )
+	banSteamid:SetSize( 200, 25 )
+	banSteamid:SetText( "Bannir par SteamID" )
+    banSteamid.DoClick = function()
+        /*local BanIDPanel = vgui.Create( "DFrame" )
+        BanIDPanel:SetParent( base )
+        BanIDPanel:SetPos( 100, 100 )
+        BanIDPanel:SetSize( 300, 200 )
+        BanIDPanel:Center(  )
+        BanIDPanel:SetTitle( "Ban par SteamID64" )
+        BanIDPanel:SetDraggable( true )
+        BanIDPanel:MakePopup()
+		BanIDPanel:ShowCloseButton( false )
+		BanIDPanel.Paint = function()
+			draw.RoundedBox( 0, 0, 0, BanIDPanel:GetWide(), BanIDPanel:GetTall(), Color( 0, 0, 0, 255 ) )
+			draw.RoundedBox( 0, 1, 1, BanIDPanel:GetWide() - 2, BanIDPanel:GetTall() - 2 , Color( 61, 61, 61, 255 ) )
+			draw.RoundedBox( 0, 1, 1, BanIDPanel:GetWide() - 2, 24, Color(0, 71, 152, 255) )
+		end
+
+		local CloseBanIDPanel = vgui.Create( "DButton" )
+		CloseBanIDPanel:SetParent( BanIDPanel )
+			CloseBanIDPanel:SetPos(BanIDPanel:GetWide() - 30, 0 )
+			CloseBanIDPanel:SetText( "" )
+			CloseBanIDPanel:SetSize( 45, 25 )
+			CloseBanIDPanel.DoClick = function()
+			BanIDPanel:Close()
+		end
+			CloseBanIDPanel.Paint = function()
+			draw.RoundedBox( 0, 0, 1, CloseBanIDPanel:GetWide()-2, CloseBanIDPanel:GetTall()-1, Color(200,0,0,255) )
+			draw.DrawText( "X", "HudHintTextLarge", 10, 5, Color(128,128,128,255), TEXT_ALIGN_LEFT )
+		end
+
+        local BanIDLbl = vgui.Create( "DLabel" )
+        BanIDLbl:SetParent(BanIDPanel)
+        BanIDLbl:SetPos( 10, 35 )
+		BanIDLbl:SetSize( BanIDPanel:GetWide() - 20, 20)
+        BanIDLbl:SetText( "" )
+		BanIDLbl.Paint = function()
+			draw.DrawText( "Entrez le SteamID du joueur", "CenterPrintText", 0, 0, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT )
+		end
+
+		local BanIDBox = vgui.Create( "DTextEntry" )
+		BanIDBox:SetParent(BanIDPanel)
+		BanIDBox:SetPos( 10, 60 )
+		BanIDBox:SetSize( BanIDPanel:GetWide() - 20, 25 )
+
+		local BanIDButton = vgui.Create( "DButton" )
+		BanIDButton:SetParent( BanIDPanel )
+		BanIDButton:SetPos( 10, 90 )
+		BanIDButton:SetSize( BanIDPanel:GetWide() - 20, 25 )
+		BanIDButton:SetText( "Bannir par SteamID" )
+		BanIDButton.DoClick = function()
+			print("Steamid a bannir: " .. BanIDBox:GetText())
+			addBantoSteamID(BanIDBox:GetText(), "Test !", 1, 120, "true")
+		end*/
+
+
+
+
+		local msgRaisonBan = "Rentrez ici les details du ban, cela doit être très explicite !"
+
+		local banpan = vgui.Create( "DFrame" )
+		banpan:SetParent( base )
+		banpan:SetPos(ScrW() / 2 - 200, ScrH() / 2 - 170)
+		banpan:SetSize( 400, 340 )
+		banpan:SetTitle( "Ban par SteamID " )
+		banpan:SetBackgroundBlur( true )
+		banpan:SetDraggable( true )
+		banpan:ShowCloseButton( false )
+		banpan:MakePopup()
+		banpan.Paint = function(self, w, h)
+			draw.RoundedBox(0, 0, 0, w, h , Color(61,61,61,255))
+			draw.RoundedBox(0, 0, 0, w, 25 , Color(0, 71, 152, 255))
+		end
+
+		local CloseBanPanel = vgui.Create( "DButton" )
+		CloseBanPanel:SetParent( banpan )
+			CloseBanPanel:SetPos(banpan:GetWide() - 30, 0 )
+			CloseBanPanel:SetText( "" )
+			CloseBanPanel:SetSize( 45, 25 )
+			CloseBanPanel.DoClick = function()
+			banpan:Close()
+		end
+			CloseBanPanel.Paint = function(self, w, h)
+			draw.RoundedBox( 0, 0, 0, w, h, Color(200,0,0,255) )
+			draw.DrawText( "X", "HudHintTextLarge", 10, 5, Color(128,128,128,255), TEXT_ALIGN_LEFT )
+		end
+
+		local BanIDBox = vgui.Create( "DTextEntry" )
+		BanIDBox:SetParent( banpan )
+		BanIDBox:SetPos( 10, 25 )
+		BanIDBox:SetSize( banpan:GetWide() - 20, 30 )
+		BanIDBox:SetText("SteamID a rentrer ici")
+		BanIDBox.OnGetFocus = function()
+			if (BanIDBox:GetValue() == "SteamID a rentrer ici") then
+				BanIDBox:SetText( "" )
+			end
+		end
+
+		-- local banlbl = vgui.Create ( "DLabel" )
+		-- banlbl:SetParent( banpan )
+		-- banlbl:SetPos( 10, 40 )
+		-- banlbl:SetSize( banpan:GetWide() - 20, 20)
+		-- banlbl:SetFont( "Trebuchet18" )
+		-- banlbl:SetText( "Inscrivez les détails du ban : ")
+
+		local banres = vgui.Create( "DTextEntry" )
+		banres:SetParent( banpan )
+		banres:SetPos( 10, 60 )
+		banres:SetSize( banpan:GetWide() - 20, 30 )
+		banres:SetText(msgRaisonBan)
+		banres.OnGetFocus = function()
+			if (banres:GetValue() == msgRaisonBan) then
+				banres:SetText( "" )
+			end
+		end
+
+		local banlab1 = vgui.Create( "DLabel" )
+		banlab1:SetParent( banpan )
+		banlab1:SetPos( 10, 100 )
+		banlab1:SetFont( "Trebuchet18" )
+		banlab1:SetText( "Sévérité du ban :" )
+		banlab1:SizeToContents()
+
+		/*local banser = vgui.Create( "Slider" )
+		banser:SetParent( banpan )
+		banser:SetPos ( 10, 130 )
+		banser:SetWide( banpan:GetWide() - 20 )
+		banser:SetMin( 1 )
+		banser:SetMax( 3 )
+		banser:SetValue( 1 )
+		banser:SetDecimals( 0 )*/
+
+		local bsev = 0
+
+		local bansev1 = vgui.Create("DButton")
+		local bansev2 = vgui.Create("DButton")
+		local bansev3 = vgui.Create("DButton")
+
+		bansev1:SetParent(banpan)
+		bansev1:SetPos(10, 130)
+		bansev1:SetSize((banpan:GetWide() - 20) / 3, 40)
+		bansev1:SetText( "Mineur" )
+		bansev1:SetTextColor( Color( 250, 250, 250, 255))
+		bansev1.Paint = function(self, w , h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+		end
+		bansev1.DoClick = function()
+			bansev1.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(200, 0, 0, 255))
+			end
+			bansev2.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+			end
+			bansev3.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+			end
+			bansev1:SetDisabled(true)
+			bansev2:SetDisabled(false)
+			bansev3:SetDisabled(false)
+			bsev = 1
+		end
+
+		bansev2:SetParent(banpan)
+		bansev2:SetPos(bansev1:GetWide() + 10, 130)
+		bansev2:SetSize((banpan:GetWide() - 20) / 3, 40)
+		bansev2:SetText( "Majeur" )
+		bansev2:SetTextColor( Color( 250, 250, 250, 255))
+		bansev2.Paint = function(self, w , h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+		end
+		bansev2.DoClick = function()
+			bansev1.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+			end
+			bansev2.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(200, 0, 0, 255))
+			end
+			bansev3.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+			end
+			bansev1:SetDisabled(false)
+			bansev2:SetDisabled(true)
+			bansev3:SetDisabled(false)
+			bsev = 2
+		end
+
+		bansev3:SetParent(banpan)
+		bansev3:SetPos(bansev2:GetWide() * 2 + 10, 130)
+		bansev3:SetSize((banpan:GetWide() - 20) / 3, 40)
+		bansev3:SetText( "Critique" )
+		bansev3:SetTextColor( Color( 250, 250, 250, 255))
+		bansev3.Paint = function(self, w , h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+		end
+		bansev3.DoClick = function()
+			bansev1.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+			end
+			bansev2.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 71, 152, 255))
+			end
+			bansev3.Paint = function(self, w , h)
+				draw.RoundedBox(0, 0, 0, w, h, Color(200, 0, 0, 255))
+			end
+			bansev1:SetDisabled(false)
+			bansev2:SetDisabled(false)
+			bansev3:SetDisabled(true)
+			bsev = 3
+		end
+
+		local banlab2 = vgui.Create( "DLabel" )
+		banlab2:SetParent( banpan )
+		banlab2:SetPos( 10, 180 )
+		banlab2:SetText( "Durée du ban :" )
+		banlab2:SizeToContents()
+
+		local bantim = vgui.Create( "DNumberWang" )
+		bantim:SetParent( banpan )
+		bantim:SetPos( 10, 210 )
+		bantim:SetSize( 50, 25 )
+		bantim:SetMin( 0 )
+		bantim:SetFraction( 1 )
+		bantim:SetDecimals( 0 )
+
+		local bancon = vgui.Create( "DComboBox" )
+		bancon:SetParent( banpan )
+		bancon:SetPos( 100, 210 )
+		bancon:SetSize( 150, 25 )
+		bancon:SetValue( "Minute" )
+
+		bancon:AddChoice( "Minute" )
+		bancon:AddChoice( "Heure" )
+		bancon:AddChoice( "Jour" )
+		bancon:AddChoice( "Semaine" )
+		bancon:AddChoice( "Mois" )
+		bancon:AddChoice( "Année" )
+		bancon:AddChoice( "Permanent" )
+
+		local banRpLbl = vgui.Create("DLabel")
+		banRpLbl:SetParent(banpan)
+		banRpLbl:SetPos(10, 250)
+		banRpLbl:SetFont( "Trebuchet18" )
+		banRpLbl:SetText( "Le bannissement est il en rapport avec le RP du joueur ?" )
+		banRpLbl:SizeToContents()
+
+		local banRpCheck = vgui.Create( "DCheckBox" )
+		banRpCheck:SetParent(banpan)
+		banRpCheck:SetPos(335, 250)
+		banRpCheck:SetValue(0)
+
+		local banRpCheckLbl = vgui.Create("DLabel")
+		banRpCheckLbl:SetParent(banpan)
+		banRpCheckLbl:SetPos(355, 250)
+		banRpCheckLbl:SetFont( "Trebuchet18" )
+		banRpCheckLbl:SetText( "Oui" )
+		banRpCheckLbl:SizeToContents()
+
+		local banbut = vgui.Create( "DButton")
+		banbut:SetParent( banpan )
+		banbut:SetPos( 10, 280 )
+		banbut:SetSize( banpan:GetWide() - 20, 40 )
+		banbut:SetText( "" )
+		banbut.Paint = function(self, w, h)
+		draw.RoundedBox( 0, 0, 0, w, h, Color(0,200,0,255) )
+		draw.DrawText( "Valider le Ban", "CloseCaption_Bold", w / 2, 5, Color(255,255,255,255), TEXT_ALIGN_CENTER )
+		end
+		banbut.DoClick = function()
+			braison = banres:GetValue()
+			textb = bancon:GetValue()
+			tem = bantim:GetValue()
+			brp = banRpCheck:GetChecked()
+			if ( string.sub( textb, 1, 5 ) == "Heure" ) then
+				btemp = tem * 60
+			elseif ( string.sub( textb, 1, 4 ) == "Jour" ) then
+				btemp = tem * 1440
+			elseif ( string.sub( textb, 1, 7 ) == "Semaine" ) then
+				btemp = tem * 10080
+			elseif ( string.sub( textb, 1, 4 ) == "Mois" ) then
+				btemp = tem * 40320
+			elseif ( string.sub( textb, 1, 5 ) == "Année" ) then
+				btemp = tem * 483840
+			elseif ( string.sub( textb, 1, 9 ) == "Permanent" ) then
+				btemp = 0
+			else
+				btemp = tem
+			end
+			addBantoSteamID(BanIDBox:GetText(),braison,bsev,btemp,brp)
+			//addBantoSteamID(BanIDBox:GetText(), "Test !", 1, 120, "true")
+			banpan:Close()
+		end
+    end
 
 end
 

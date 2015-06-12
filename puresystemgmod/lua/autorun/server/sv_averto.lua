@@ -3,6 +3,7 @@ include("autorun/pure_config.lua")
 util.AddNetworkString( "averto" )
 util.AddNetworkString( "kickto" )
 util.AddNetworkString( "banto" )
+util.AddNetworkString( "bantosteamid" )
 
 
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
@@ -17,6 +18,10 @@ end)
 
 net.Receive( "banto", function( len, ply )
     addBanto( ply, net.ReadEntity(), net.ReadString(), net.ReadInt( 4 ), net.ReadFloat(),net.ReadBool() )
+end)
+
+net.Receive( "bantosteamid", function( len, ply )
+    addBantoSteamID( ply, net.ReadString(), net.ReadString(), net.ReadInt( 4 ), net.ReadFloat(),net.ReadBool() )
 end)
 
 function addAverto(admin, target, detail, sev, rp)
@@ -78,6 +83,27 @@ function addBanto(admin, target, raison, sev, temp, rp)
     end
     );
     file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..target:Name().." avec le SteamID : "..target:SteamID().." a ete Banni du serveur par : "..admin:Nick())
+end
+
+function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
+    temp = temp * 60
+
+    if (tostring(rp) == "true") then rp = 1 else rp = 0 end
+
+    print("Je demande la page: \n\nhttp://puresystem.fr/api/rest/ban.php?port="..PURE.port.."&steamid64=".. steamid .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."")
+
+    http.Fetch( "http://puresystem.fr/api/rest/ban.php?port="..PURE.port.."&steamid64=".. steamid .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."",
+    function( body, len, headers, code )
+        print("[PS] Kick envoyé au serveur !")
+        for k, ply in pairs( player.GetAll() ) do
+        	ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
+        end
+    end,
+    function( error )
+        print("[PS] Impossible de contacter le serveur Pure System...")
+    end
+    );
+    file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..steamid.." a ete Banni du serveur par : "..admin:Nick())
 end
 
 function getNewreput(target)
