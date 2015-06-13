@@ -65,15 +65,15 @@ if ( SERVER ) then
         );
 	end
 
-	hook.Add("PlayerAuthed","Player_auth",function(ply, steamid, uniqueid)
-        timer.Simple(9, function() //let darkrp load their name before checking
+	hook.Add("PlayerInitialSpawn","Player_auth",function(ply)
+        timer.Simple(PURE.waitafterspawn, function() //let darkrp load their name before checking
             local pseudo = ply:Name()
-            local steamidArg = steamid
+            local steamidArg = ply:SteamID()
             local steamid64 = ply:SteamID64()
 
             connexionPlayer(pseudo, steamidArg, steamid64, ply)
 			file.Append(PureLog,
-			"\n"..os.date().."\tConnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamid.." realisee avec succes !")
+			"\n"..os.date().."\tConnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamidArg.." realisee avec succes !")
         end)
 	end)
 

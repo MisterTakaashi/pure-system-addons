@@ -1,8 +1,10 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
-net.Receive("OpenLoadingScreen", function(length)
-	local closed = false
 
+closed = false
+chargementTermine = false
+
+net.Receive("OpenLoadingScreen", function(length)
 	base = vgui.Create("DFrame")
 	base:SetPos(0,0)
 	base:SetSize(ScrW(),ScrH())
@@ -15,13 +17,19 @@ net.Receive("OpenLoadingScreen", function(length)
 		draw.RoundedBox(0,0,0,w,h,Color(250,250,250,255))
 	end
 
+    closed = false
+    
 	lgui = vgui.Create("DPanel")
 	lgui:SetParent(base)
 	lgui:SetPos(ScrW()/2 - 200,ScrH() - 150)
 	lgui:SetSize(400,100)
 	lgui.Paint = function(self,w,h)
 		draw.RoundedBox(0,0,0,w,h,Color(250, 250, 250,255))
-		draw.DrawText( "Chargement ...", "CloseCaption_Bold", w/2, h/2 - 10, Color(160,160,160,255), TEXT_ALIGN_CENTER )
+        if (chargementTermine == false) then
+            draw.DrawText( "Chargement ...", "CloseCaption_Bold", w/2, h/2 - 10, Color(160,160,160,255), TEXT_ALIGN_CENTER )
+        else
+            draw.DrawText( "Chargement terminé !", "CloseCaption_Bold", w/2, h/2 - 10, Color(160,160,160,255), TEXT_ALIGN_CENTER )
+        end
 	end
 	lgui:AlphaTo( 50, 2, 0)
 	lgui:AlphaTo( 255, 2, 2)
@@ -60,7 +68,7 @@ net.Receive("OpenLoadingScreen", function(length)
 		draw.DrawText( "Serveur protégé par PureSystem.fr", "DermaLarge", w/2, h/2 - 10, Color(0, 71, 152, 255), TEXT_ALIGN_CENTER )
 	end
 
-	timer.Simple(9, function()
+	timer.Simple(PURE.waitloadingbutton, function()
 		logpas = vgui.Create("DButton",base)
 		logpas:SetPos(ScrW() - 200,ScrH() - 100 )
 		logpas:SetSize(190, 50)
@@ -69,6 +77,8 @@ net.Receive("OpenLoadingScreen", function(length)
 			draw.RoundedBox(0,0,0,w,h,Color(200,0,0,255))
 			draw.DrawText("Passer","Trebuchet24",w/2-5,10,Color(255,255,255,255),TEXT_ALIGN_CENTER)
 		end
+        lgui:AlphaTo( 255, 18 )
+        chargementTermine = true
 		logpas.DoClick = function()
 			base:Close()
 			closed = true
@@ -80,7 +90,7 @@ net.Receive("OpenLoadingScreen", function(length)
 end);
 
 net.Receive("CloseLoadingScreen", function(length)
-	timer.Simple(9, function()
+	timer.Simple(1, function()
 		ply = LocalPlayer();
 		if closed == false then
 			base:Close()
@@ -95,7 +105,7 @@ net.Receive("CloseLoadingScreen", function(length)
 end);
 
 net.Receive("CloseLoadingScreenErr", function(length)
-	timer.Simple(9, function()
+	timer.Simple(1, function()
 		ply = LocalPlayer();
 		base:Close()
 		chat.AddText( Color( 250, 0, 0 ), "[PS] Ce serveur n'est pas répertorié sur le Pure System");
