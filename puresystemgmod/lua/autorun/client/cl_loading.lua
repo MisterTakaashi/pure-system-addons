@@ -18,7 +18,7 @@ net.Receive("OpenLoadingScreen", function(length)
 	end
 
     closed = false
-    
+
 	lgui = vgui.Create("DPanel")
 	lgui:SetParent(base)
 	lgui:SetPos(ScrW()/2 - 200,ScrH() - 150)
@@ -90,11 +90,11 @@ net.Receive("OpenLoadingScreen", function(length)
 end);
 
 net.Receive("CloseLoadingScreen", function(length)
-	timer.Simple(1, function()
-		ply = LocalPlayer();
-		if closed == false then
-			base:Close()
-		end
+	ply = LocalPlayer();
+	if closed == false then
+		base:Close()
+	end
+	timer.Simple(PURE.networkwait, function()
 		local reputation = ply:GetNWInt('reputation');
 		local reputationrp = ply:GetNWInt('reputationrp', 'new');
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Chargement des données terminé, Bon jeu !");
