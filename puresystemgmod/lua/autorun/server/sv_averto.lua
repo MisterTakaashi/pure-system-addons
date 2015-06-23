@@ -4,6 +4,8 @@ util.AddNetworkString( "averto" )
 util.AddNetworkString( "kickto" )
 util.AddNetworkString( "banto" )
 util.AddNetworkString( "bantosteamid" )
+util.AddNetworkString( "afkick" )
+util.AddNetworkString( "rcgu" )
 
 
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
@@ -22,6 +24,15 @@ end)
 
 net.Receive( "bantosteamid", function( len, ply )
     addBantoSteamID( ply, net.ReadString(), net.ReadString(), net.ReadInt( 4 ), net.ReadFloat(),net.ReadBool() )
+end)
+
+net.Receive( "afkick", function(len, ply)
+  addAFKick(ply, net.ReadEntity(),net.ReadString())
+end)
+
+net.Receive( "rcgu", function(len, ply)
+  ply:Kick("Vous n'avez pas accepte les CGU")
+  file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..ply:Name().." avec le SteamID : "..ply:SteamID().." n'a pas accepte les conditions generales d'utilisation et a ete Kick")
 end)
 
 function addAverto(admin, target, detail, sev, rp)
@@ -104,6 +115,11 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
     end
     );
     file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..steamid.." a ete Banni du serveur par : "..admin:Nick())
+end
+
+function addAFKick(admin,target,raison)
+  target:Kick("Kick par administrateur\nRaison : "..raison)
+  file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..target:Name().." avec SteamID : "..target:SteamID().." a ete kick du serveur par : "..admin:Nick())
 end
 
 function getNewreput(target)

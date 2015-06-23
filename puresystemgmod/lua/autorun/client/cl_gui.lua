@@ -17,7 +17,7 @@ local function addAverto(target,detail,sev,rp)
 	net.SendToServer()
 end
 
-local function addKickto(target,raison,sev, rp)
+local function addKickto( target,raison,sev, rp)
 	net.Start( "kickto" )
 	net.WriteEntity( target )
 	net.WriteString( raison )
@@ -43,6 +43,13 @@ local function addBantoSteamID(target,raison,sev,temp, rp)
 	net.WriteInt( sev, 4 )
 	net.WriteFloat( temp )
 	net.WriteBool( rp )
+	net.SendToServer()
+end
+
+local function addAFKick(target,raison)
+	net.Start( "afkick" )
+		net.WriteEntity( target )
+		net.WriteString( raison )
 	net.SendToServer()
 end
 
@@ -841,7 +848,7 @@ local function PurePanel()
 			banRpCheck:SetPos(335, 250)
 			banRpCheck:SetValue(0)
 
-			local banRpCheckLbl = vgui.Create("DLabel")
+			local banRpCheckLbl = vgui.Create( "DLabel" )
 			banRpCheckLbl:SetParent(banpan)
 			banRpCheckLbl:SetPos(355, 250)
 			banRpCheckLbl:SetFont( "Trebuchet18" )
@@ -883,6 +890,71 @@ local function PurePanel()
 		end )
 		btnBan:SetIcon("icon16/delete.png")
 
+		local btnAFKick = menu:AddOption("AFKick", function()
+
+
+			local AFKpan = vgui.Create( "DFrame" )
+			AFKpan:SetParent( base )
+			AFKpan:SetPos(ScrW() / 2 - 200, ScrH() / 2 - 170)
+			AFKpan:SetSize( 400, 200 )
+			AFKpan:SetTitle( "Panneau de AFKick" )
+			AFKpan:SetBackgroundBlur( true )
+			AFKpan:SetDraggable( true )
+			AFKpan:ShowCloseButton( false )
+			AFKpan:MakePopup()
+			AFKpan.Paint = function(self, w, h)
+				draw.RoundedBox(0, 0, 0, w, h , Color(61,61,61,255))
+				draw.RoundedBox(0, 0, 0, w, 25 , Color(0, 71, 152, 255))
+			end
+
+			local CloseAFKPanel = vgui.Create( "DButton" )
+		    CloseAFKPanel:SetParent( AFKpan )
+				CloseAFKPanel:SetPos(AFKpan:GetWide() - 30, 0 )
+				CloseAFKPanel:SetText( "" )
+				CloseAFKPanel:SetSize( 45, 25 )
+				CloseAFKPanel.DoClick = function()
+		        AFKpan:Close()
+		    end
+				CloseAFKPanel.Paint = function(self, w, h)
+		        draw.RoundedBox( 0, 0, 0, w, h, Color(200,0,0,255) )
+		        draw.DrawText( "X", "HudHintTextLarge", 10, 5, Color(128,128,128,255), TEXT_ALIGN_LEFT )
+		    end
+
+			local AFKlbl2 = vgui.Create( "DLabel",AFKpan)
+				AFKlbl2:SetPos( 10, 30 )
+				AFKlbl2:SetText( "Ce kick ne sera PAS reference sur le Pure,\nil sert a kick les AFK et n'inflige aucune sanction !" )
+				AFKlbl2:SetFont( "Trebuchet18" )
+				AFKlbl2:SizeToContents()
+
+			local AFKlbl1 = vgui.Create("DLabel",AFKpan)
+				AFKlbl1:SetPos(10,75)
+				AFKlbl1:SetFont("Trebuchet18")
+				AFKlbl1:SetText("Inscrivez tout de meme la raison :")
+				AFKlbl1:SizeToContents()
+
+			local AFKres = vgui.Create( "DTextEntry" )
+				AFKres:SetParent( AFKpan )
+				AFKres:SetPos( 10, 95 )
+				AFKres:SetSize( AFKpan:GetWide() - 20, 30 )
+				AFKres:SetText("Raison ...")
+
+			local AFKbut = vgui.Create( "DButton")
+				AFKbut:SetParent( AFKpan )
+				AFKbut:SetPos( 10, 160 )
+				AFKbut:SetSize( AFKpan:GetWide() - 20, 40 )
+				AFKbut:SetText( "" )
+				AFKbut.Paint = function(self, w, h)
+	        draw.RoundedBox( 0, 0, 0, w, h, Color(0,200,0,255) )
+	        draw.DrawText( "Valider le Kick", "CloseCaption_Bold", w / 2, 5, Color(255,255,255,255), TEXT_ALIGN_CENTER )
+	    	end
+				AFKbut.DoClick = function()
+					AFKr = AFKres:GetValue()
+					addAFKick(getPlayerFromSteamId64(line:GetValue(5)),AFKr)
+					AFKpan:Close()
+				end
+		end)
+		btnAFKick:SetIcon("icon16/control_eject.png")
+
 		local btnferm = menu:AddOption("Fermer", function()  end)
 		btnferm:SetIcon("icon16/door_out.png")
 
@@ -917,7 +989,7 @@ local function PurePanel()
 	end
 
 
-    local banSteamid = vgui.Create( "DButton" )
+local banSteamid = vgui.Create( "DButton" )
 	banSteamid:SetParent( base )
 	banSteamid:SetPos( 580, 460 )
 	banSteamid:SetSize( 200, 25 )

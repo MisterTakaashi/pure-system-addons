@@ -16,8 +16,6 @@ PURE = {}
 
 	PURE.waitafterspawn = 19 //Nombre de secondes après le spawn pour faire requete vers API > A augmenter si le serveur met plus de temps pour requetter l'API
 
-	PURE.waitloadingbutton = 19 //Nombre de secondes avant apparition du bouton PASSER sur l'écran de chargement
-
 	PURE.networkwait = 6 //Temps de chargement des networked variable avant affichage reputation dans tchat à la connexion
 	--------------------------------------------------------------------OnPeutToucher:D-----------------------------------------------------------
 	/* Ici vous touchez comme vous le voulez ,
