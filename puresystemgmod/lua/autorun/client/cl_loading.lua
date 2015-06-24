@@ -122,6 +122,18 @@ net.Receive("OpenLoadingScreen", function(length)
 			cgubutt1.DoClick = function()
 				if cguok:GetChecked() == true then
 					base:Close()
+				else
+					cavt = vgui.Create("DPanel",base)
+					cavt:SetPos(90,1010)
+					cavt:SetSize(250,50)
+					cavt.Paint = function(self,w,h)
+						draw.OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
+					end
+					cavt:SetAlpha(0)
+					cavt:AlphaTo( 255 , 1, 0)
+					timer.Simple(2,function()
+						cavt:Remove()
+					end)
 				end
 			end
 
@@ -137,6 +149,18 @@ net.Receive("OpenLoadingScreen", function(length)
 				if cguok:GetChecked() == true then
 					net.Start("rcgu")
 					net.SendToServer()
+				else
+					cavt = vgui.Create("DPanel",base)
+					cavt:SetPos(90,1010)
+					cavt:SetSize(250,50)
+					cavt.Paint = function(self,w,h)
+						draw.OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
+					end
+					cavt:SetAlpha(0)
+					cavt:AlphaTo( 255 , 1, 0)
+					timer.Simple(2,function()
+						cavt:Remove()
+					end)
 				end
 			end
 
