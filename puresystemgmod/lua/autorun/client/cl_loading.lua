@@ -100,6 +100,14 @@ net.Receive("OpenLoadingScreen", function(length)
 	cdutilh:SetSize(ScrW() - 204, 346)
 	cdutilh:OpenURL("puresystem.fr/cgu.html")
 
+	local cavt = vgui.Create("DPanel",base)
+		cavt:SetPos(90,1010)
+		cavt:SetSize(250,50)
+		cavt.Paint = function(self,w,h)
+			draw.OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
+		end
+		cavt:SetAlpha(0)
+
 	local cguok = vgui.Create("DCheckBoxLabel",base)
 		cguok:SetPos( 100, 1025 )						// Set the position
 		cguok:SetText( "J'ai lu les Conditions Generales d'Utilisation" )					// Set the text next to the box
@@ -119,17 +127,7 @@ net.Receive("OpenLoadingScreen", function(length)
 				if cguok:GetChecked() == true then
 					base:Remove()
 				else
-					cavt = vgui.Create("DPanel",base)
-					cavt:SetPos(90,1010)
-					cavt:SetSize(250,50)
-					cavt.Paint = function(self,w,h)
-						draw.OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
-					end
-					cavt:SetAlpha(0)
 					cavt:AlphaTo( 255 , 1, 0)
-					timer.Simple(2,function()
-						cavt:Remove()
-					end)
 				end
 			end
 
@@ -147,17 +145,7 @@ net.Receive("OpenLoadingScreen", function(length)
 					net.Start("rcgu")
 					net.SendToServer()
 				else
-					cavt = vgui.Create("DPanel",base)
-					cavt:SetPos(90,1010)
-					cavt:SetSize(250,50)
-					cavt.Paint = function(self,w,h)
-						draw.OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
-					end
-					cavt:SetAlpha(0)
 					cavt:AlphaTo( 255 , 1, 0)
-					timer.Simple(2,function()
-						cavt:Remove()
-					end)
 				end
 			end
 

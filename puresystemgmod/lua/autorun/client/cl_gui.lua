@@ -89,6 +89,8 @@ local function PurePanel()
 		ClosePurePanel:SetSize( 45, 25 )
 		ClosePurePanel.DoClick = function()
         base:Close()
+				net.Start("sunfrezz")
+				net.SendToServer()
     end
 		ClosePurePanel.Paint = function()
         draw.RoundedBox( 0, 0, 0, ClosePurePanel:GetWide(), ClosePurePanel:GetTall(), Color(200,0,0,255) )
@@ -515,6 +517,10 @@ local function PurePanel()
 				draw.RoundedBox(0, 0, 0, w, h , Color(61,61,61,255))
 				draw.RoundedBox(0, 0, 0, w, 25 , Color(0, 71, 152, 255))
 			end
+			function kickpan:OnClose()
+				unfreezetk(getPlayerFromSteamId64(line:GetValue(5)))
+			end
+
 
 			local CloseKickPanel = vgui.Create( "DButton" )
 		    CloseKickPanel:SetParent( kickpan )
@@ -523,7 +529,6 @@ local function PurePanel()
 				CloseKickPanel:SetSize( 45, 25 )
 				CloseKickPanel.DoClick = function()
 		        kickpan:Close()
-						unfreezetk(getPlayerFromSteamId64(line:GetValue(5)))
 		    end
 				CloseKickPanel.Paint = function(self, w, h)
 		        draw.RoundedBox( 0, 0, 0, w, h, Color(200,0,0,255) )
@@ -677,7 +682,7 @@ local function PurePanel()
         draw.RoundedBox( 0, 0, 0, w, h, Color(0,200,0,255) )
         draw.DrawText( "Valider le Kick", "CloseCaption_Bold", w / 2, 5, Color(255,255,255,255), TEXT_ALIGN_CENTER )
     	end
-		end )
+		end)
 		btnKick:SetIcon("icon16/door.png")
 
 		local btnBan = menu:AddOption("Ban", function()

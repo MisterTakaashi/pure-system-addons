@@ -8,7 +8,11 @@ util.AddNetworkString( "afkick" )
 util.AddNetworkString( "rcgu" )
 util.AddNetworkString( "freezetk" )
 util.AddNetworkString( "unfreezetk" )
+util.AddNetworkString( "sunfrezz" )
 
+for k,v in pairs(player.GetAll()) do
+  v:SetNWBool("freezed",false)
+end
 
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
@@ -41,13 +45,26 @@ net.Receive( "freezetk", function(len,ply)
   targ = net.ReadEntity()
   targ:Freeze(true)
   targ:ChatPrint("Une sanction va tomber ! Vous êtes freeze !")
+  targ:SetNWBool("frezzed",true)
 end)
 
 net.Receive( "unfreezetk", function(len,ply)
   targ = net.ReadEntity()
   targ:Freeze(false)
   targ:ChatPrint("Vous avez été unfreeze !")
+  targ:SetNWBool("frezzed",false)
 end)
+
+net.Receive( "sunfrezz", function()
+  for k,v in pairs(player.GetAll()) do
+    if v:GetNWBool( "frezzed" ) == true then
+      v:SetNWBool( "frezzed", false )
+      v:Freeze(false)
+      v:ChatPrint("Vous avez été unfreeze")
+    end
+  end
+end)
+
 
 function addAverto(admin, target, detail, sev, rp)
     //print( admin:Nick().." vient de mettre un avertissement à "..target:Nick()..". Détails : "..detail)
@@ -125,7 +142,11 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
     function( body, len, headers, code )
         print("[PS] Kick envoyé au serveur !")
         for k, ply in pairs( player.GetAll() ) do
-        	ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
+          if temp != 0 then
+        	   ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
+          else
+            ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." de facon permanente. Raison : "..raison)
+          end
         end
     end,
     function( error )
