@@ -8,6 +8,18 @@ local function getPlayerFromSteamId64(steamid64)
 	return nil
 end
 
+local function freezetk(target)
+	net.Start("freezetk")
+	 net.WriteEntity(target)
+	net.SendToServer()
+end
+
+local function unfreezetk(target)
+	net.Start("unfreezetk")
+		net.WriteEntity(target)
+	net.SendToServer()
+end
+
 local function addAverto(target,detail,sev,rp)
 	net.Start( "averto" )
 	net.WriteEntity( target )
@@ -488,6 +500,7 @@ local function PurePanel()
 		local btnKick = menu:AddOption("Kick", function()
 
 			local msgRaisonKick = "Rentrez ici les details du kick, cela doit être très explicite !"
+			freezetk(getPlayerFromSteamId64(line:GetValue(5)))
 
 			local kickpan = vgui.Create( "DFrame" )
 			kickpan:SetParent( base )
@@ -510,6 +523,7 @@ local function PurePanel()
 				CloseKickPanel:SetSize( 45, 25 )
 				CloseKickPanel.DoClick = function()
 		        kickpan:Close()
+						unfreezetk(getPlayerFromSteamId64(line:GetValue(5)))
 		    end
 				CloseKickPanel.Paint = function(self, w, h)
 		        draw.RoundedBox( 0, 0, 0, w, h, Color(200,0,0,255) )
@@ -655,6 +669,7 @@ local function PurePanel()
 			kickbut.DoClick = function()
 				kraison = kickres:GetValue()
 				krp = kickRpCheck:GetChecked()
+				unfreezetk(getPlayerFromSteamId64(line:GetValue(5)))
 				addKickto(getPlayerFromSteamId64(line:GetValue(5)),kraison,ksev,krp)
 				kickpan:Close()
 			end
@@ -668,7 +683,7 @@ local function PurePanel()
 		local btnBan = menu:AddOption("Ban", function()
 
 			local msgRaisonBan = "Rentrez ici les details du ban, cela doit être très explicite !"
-
+			freezetk(getPlayerFromSteamId64(line:GetValue(5)))
 			local banpan = vgui.Create( "DFrame" )
 			banpan:SetParent( base )
 			banpan:SetPos(ScrW() / 2 - 200, ScrH() / 2 - 170)
@@ -690,6 +705,7 @@ local function PurePanel()
 				CloseBanPanel:SetSize( 45, 25 )
 				CloseBanPanel.DoClick = function()
 		        banpan:Close()
+						unfreezetk(getPlayerFromSteamId64(line:GetValue(5)))
 		    end
 				CloseBanPanel.Paint = function(self, w, h)
 		        draw.RoundedBox( 0, 0, 0, w, h, Color(200,0,0,255) )
@@ -884,6 +900,7 @@ local function PurePanel()
 				else
 					btemp = tem
 				end
+				unfreezetk(getPlayerFromSteamId64(line:GetValue(5)))
 				addBanto(getPlayerFromSteamId64(line:GetValue(5)),braison,bsev,btemp,brp)
 				banpan:Close()
 			end

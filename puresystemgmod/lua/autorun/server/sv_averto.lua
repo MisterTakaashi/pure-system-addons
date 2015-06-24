@@ -6,6 +6,8 @@ util.AddNetworkString( "banto" )
 util.AddNetworkString( "bantosteamid" )
 util.AddNetworkString( "afkick" )
 util.AddNetworkString( "rcgu" )
+util.AddNetworkString( "freezetk" )
+util.AddNetworkString( "unfreezetk" )
 
 
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
@@ -33,6 +35,18 @@ end)
 net.Receive( "rcgu", function(len, ply)
   ply:Kick("Vous n'avez pas accepte les CGU")
   file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..ply:Name().." avec le SteamID : "..ply:SteamID().." n'a pas accepte les conditions generales d'utilisation et a ete Kick")
+end)
+
+net.Receive( "freezetk", function(len,ply)
+  targ = net.ReadEntity()
+  targ:Freeze(true)
+  targ:ChatPrint("Une sanction va tomber ! Vous êtes freeze !")
+end)
+
+net.Receive( "unfreezetk", function(len,ply)
+  targ = net.ReadEntity()
+  targ:Freeze(false)
+  targ:ChatPrint("Vous avez été unfreeze !")
 end)
 
 function addAverto(admin, target, detail, sev, rp)
