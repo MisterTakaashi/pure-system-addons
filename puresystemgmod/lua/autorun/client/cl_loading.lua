@@ -13,13 +13,10 @@ function draw.OutlinedBox( x, y, w, h, thickness, clr )
 end
 
 net.Receive("OpenLoadingScreen", function(length)
-	base = vgui.Create("DFrame")
+	base = vgui.Create("DScrollPanel")
 	base:SetPos(0,0)
 	base:SetSize(ScrW(),ScrH())
 	base:SetVisible( true )
-	base:SetTitle( "" )
-	base:SetDraggable( false )
-	base:ShowCloseButton( true )
 	base:MakePopup()
 	base.Paint = function(self, w, h)
 		draw.RoundedBox(0,0,0,w,h,Color(250,250,250,255))
@@ -27,8 +24,7 @@ net.Receive("OpenLoadingScreen", function(length)
 
     closed = false
 
-	lgui = vgui.Create("DPanel")
-	lgui:SetParent(base)
+	lgui = vgui.Create("DPanel",base)
 	lgui:SetPos(ScrW()/2 - 200,ScrH() - 100)
 	lgui:SetSize(400,100)
 	lgui.Paint = function(self,w,h)
@@ -110,7 +106,7 @@ net.Receive("OpenLoadingScreen", function(length)
 		cguok:SetValue( 0 )
 		cguok:SizeToContents()
 
-	timer.Simple(8,function()
+
 		local cgubutt1 = vgui.Create("DButton", base)
 			cgubutt1:SetPos(100,950)
 			cgubutt1:SetSize((cdutil:GetWide() /2),50)
@@ -121,7 +117,7 @@ net.Receive("OpenLoadingScreen", function(length)
 			end
 			cgubutt1.DoClick = function()
 				if cguok:GetChecked() == true then
-					base:Close()
+					base:Remove()
 				else
 					cavt = vgui.Create("DPanel",base)
 					cavt:SetPos(90,1010)
@@ -136,6 +132,7 @@ net.Receive("OpenLoadingScreen", function(length)
 					end)
 				end
 			end
+
 
 		local cgubutt2 = vgui.Create("DButton",base)
 			cgubutt2:SetPos(cgubutt1:GetWide() + 100 ,950)
@@ -164,7 +161,8 @@ net.Receive("OpenLoadingScreen", function(length)
 				end
 			end
 
-	end)
+
+
 
 end);
 

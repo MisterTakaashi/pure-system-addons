@@ -99,7 +99,11 @@ function addBanto(admin, target, raison, sev, temp, rp)
     function( body, len, headers, code )
         print("[PS] Kick envoyé au serveur !")
         for k, ply in pairs( player.GetAll() ) do
-        	ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..target:Nick().." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
+          if temp != 0 then
+        	  ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..target:Nick().." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
+          else
+            ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..target:Nick().." de facon permanente. Raison : "..raison)
+          end
         end
         target:Kick("Banni par administrateur\nDurée: " .. (temp / 60) .. " minutes\nRaison: " .. raison)
     end,
