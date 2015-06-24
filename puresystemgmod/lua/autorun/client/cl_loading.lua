@@ -177,8 +177,7 @@ net.Receive("CloseLoadingScreen", function(length)
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Chargement des données terminé, Bon jeu !");
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Réputation: " .. reputation);
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Réputation RolePlay: " .. reputationrp);
-		chat.AddText( Color( 0, 250, 0 ), "[PS] Votre profil Web: http://puresystem.fr/id/" .. ply:SteamID64() .. "/");
-		chat.AddText( Color( 0, 250, 0 ), "[PS] Tapez !ppure dans le chat pour acceder directement a votre profil")
+		chat.AddText( Color( 0, 250, 0 ), "[PS] Tapez !ppure dans le chat pour acceder directementà votre profil web")
 	end)
 end);
 
