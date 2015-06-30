@@ -123,6 +123,7 @@ function addBanto(admin, target, raison, sev, temp, rp)
           end
         end
         target:Kick("Banni par administrateur\nDurée: " .. (temp / 60) .. " minutes\nRaison: " .. raison)
+
     end,
     function( error )
         print("[PS] Impossible de contacter le serveur Pure System...")

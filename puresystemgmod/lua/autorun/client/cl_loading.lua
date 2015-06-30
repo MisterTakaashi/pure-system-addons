@@ -114,40 +114,40 @@ net.Receive("OpenLoadingScreen", function(length)
 		cguok:SetValue( 0 )
 		cguok:SizeToContents()
 
+	local cgubutt1 = vgui.Create("DButton", base)
+		cgubutt1:SetPos(100,950)
+		cgubutt1:SetSize((cdutil:GetWide() /2),50)
+		cgubutt1:SetText("")
+		cgubutt1.Paint = function(self,w,h)
+			draw.RoundedBoxEx( 8, 0, 0, w, h, Color(0,190,0,210), false, false, true,false)
+			draw.DrawText( "Accepter les CGU", "DermaLarge", w/2 - 10, 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
+		end
+		cgubutt1.DoClick = function()
+			if cguok:GetChecked() == true then
+				base:Remove()
+			else
+				cavt:AlphaTo( 255 , 1, 0)
+			end
+		end
 
-		local cgubutt1 = vgui.Create("DButton", base)
-			cgubutt1:SetPos(100,950)
-			cgubutt1:SetSize((cdutil:GetWide() /2),50)
-			cgubutt1:SetText("")
-			cgubutt1.Paint = function(self,w,h)
-				draw.RoundedBoxEx( 8, 0, 0, w, h, Color(0,190,0,210), false, false, true,false)
-				draw.DrawText( "Accepter les CGU", "DermaLarge", w/2 - 10, 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
-			end
-			cgubutt1.DoClick = function()
-				if cguok:GetChecked() == true then
-					base:Remove()
-				else
-					cavt:AlphaTo( 255 , 1, 0)
-				end
-			end
 
+	local cgubutt2 = vgui.Create("DButton",base)
+		cgubutt2:SetPos(cgubutt1:GetWide() + 100 ,950)
+		cgubutt2:SetSize((cdutil:GetWide() /2),50)
+		cgubutt2:SetText("")
+		cgubutt2.Paint = function(self,w,h)
+			draw.RoundedBoxEx( 8, 0, 0, w, h, Color(190,0,0,210), false, false, false,true)
+			draw.DrawText( "Refuser les CGU", "DermaLarge", w/2 - 10, 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
+		end
+		cgubutt2.DoClick = function()
+			if cguok:GetChecked() == true then
+				net.Start("rcgu")
+				net.SendToServer()
+			else
+				cavt:AlphaTo( 255 , 1, 0)
+			end
+		end
 
-		local cgubutt2 = vgui.Create("DButton",base)
-			cgubutt2:SetPos(cgubutt1:GetWide() + 100 ,950)
-			cgubutt2:SetSize((cdutil:GetWide() /2),50)
-			cgubutt2:SetText("")
-			cgubutt2.Paint = function(self,w,h)
-				draw.RoundedBoxEx( 8, 0, 0, w, h, Color(190,0,0,210), false, false, false,true)
-				draw.DrawText( "Refuser les CGU", "DermaLarge", w/2 - 10, 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
-			end
-			cgubutt2.DoClick = function()
-				if cguok:GetChecked() == true then
-					net.Start("rcgu")
-					net.SendToServer()
-				else
-					cavt:AlphaTo( 255 , 1, 0)
-				end
-			end
 
 
 
@@ -157,6 +157,9 @@ end);
 net.Receive("CloseLoadingScreen", function(length)
 	ply = LocalPlayer();
 	chargementTermine = true
+
+
+
 	timer.Simple(3, function()
 		local reputation = ply:GetNWInt('reputation');
 		local reputationrp = ply:GetNWInt('reputationrp', 'new');

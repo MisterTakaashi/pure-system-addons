@@ -14,7 +14,7 @@ PURE = {}
 
 	PURE.authorisenewplayers = true //Authoriser les nouveaux joueurs
 
-	PURE.waitafterspawn = 19 //Nombre de secondes après le spawn pour faire requete vers API > A augmenter si le serveur met plus de temps pour requetter l'API
+	PURE.waitafterspawn = 5 //Nombre de secondes après le spawn pour faire requete vers API > A augmenter si le serveur met plus de temps pour requetter l'API
 
 	PURE.networkwait = 6 //Temps de chargement des networked variable avant affichage reputation dans tchat à la connexion
 	--------------------------------------------------------------------OnPeutToucher:D-----------------------------------------------------------
