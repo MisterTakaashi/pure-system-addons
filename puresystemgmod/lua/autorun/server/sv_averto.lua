@@ -153,6 +153,13 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
         print("[PS] Impossible de contacter le serveur Pure System...")
     end
     );
+  
+    for k,v in pairs(player.GetAll()) do
+      if (v:SteamID() == steamid) then
+        v:Kick("Kick par administrateur\nRaison: " .. raison)
+      end
+    end
+    
     file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..steamid.." a ete Banni du serveur par : "..admin:Nick())
 end
 
