@@ -143,11 +143,15 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
     function( body, len, headers, code )
         print("[PS] Kick envoyé au serveur !")
         for k, ply in pairs( player.GetAll() ) do
-          if temp != 0 then
-        	   ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
-          else
-            ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." de facon permanente. Raison : "..raison)
-          end
+            if (ply:SteamID() == steamid) then
+                ply:Kick("Banni par administrateur\nDurée: " .. (temp / 60) .. " minutes\nRaison: " .. raison)
+            end
+        
+            if temp != 0 then
+                ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
+            else
+                ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." de facon permanente. Raison : "..raison)
+            end
         end
     end,
     function( error )
