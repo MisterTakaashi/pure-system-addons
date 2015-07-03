@@ -35,7 +35,7 @@ if ( SERVER ) then
 
                 end
 
-                if (retourTable["reputation"] < PURE.minauthorisedrep) and (retourTable["reputation"] >  PURE.maxauthorisedrep) then
+                if (retourTable["reputation"] < PURE.minauthorisedrep) or (retourTable["reputation"] >  PURE.maxauthorisedrep) then
                     ply:Kick("Votre Reputation ne convient pas a ce serveur, elle doit être entre " .. PURE.minauthorisedrep .. " et " .. PURE.maxauthorisedrep)
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa reputation ne convenait pas !")
 
