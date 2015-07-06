@@ -64,14 +64,15 @@ net.Receive("OpenLoadingScreen", function(length)
 		end
 	end
 	logserv:MoveTo( 0, 0, 10, 0, -1)
-
-	logoser = vgui.Create("DImage")
-	logoser:SetParent(base)
-	logoser:SetPos(ScrW()/2 - 230,250)
-	logoser:SetSize(460,215)
-	logoser:SetImage(PURE.servlogo[math.random( 1, #PURE.servlogo )])
-	logoser:AlphaTo(50,1,0)
-	logoser:AlphaTo(255,3,1)
+	if PURE.servlogo != nil then
+		logoser = vgui.Create("DImage")
+		logoser:SetParent(base)
+		logoser:SetPos(ScrW()/2 - 230,250)
+		logoser:SetSize(460,215)
+		logoser:SetImage(PURE.servlogo[math.random( 1, #PURE.servlogo )])
+		logoser:AlphaTo(50,1,0)
+		logoser:AlphaTo(255,3,1)
+	end
 
 	msgpro = vgui.Create("DPanel")
 	msgpro:SetParent(base)
