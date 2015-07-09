@@ -1,15 +1,14 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
 
-
 closed = false
 chargementTermine = false
 
-function draw.OutlinedBox( x, y, w, h, thickness, clr )
-	surface.SetDrawColor( clr )
-	for i=0, thickness - 1 do
-		surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
-	end
+local function OutlinedBox( x, y, w, h, thickness, clr )
+		surface.SetDrawColor( clr )
+		for i=0, thickness - 1 do
+			surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
+		end
 end
 
 net.Receive("OpenLoadingScreen", function(length)
@@ -64,6 +63,7 @@ net.Receive("OpenLoadingScreen", function(length)
 		end
 	end
 	logserv:MoveTo( 0, 0, 10, 0, -1)
+
 	if PURE.servlogo != nil then
 		logoser = vgui.Create("DImage")
 		logoser:SetParent(base)
@@ -93,7 +93,7 @@ net.Receive("OpenLoadingScreen", function(length)
 		cdutil.Paint = function(self,w,h)
 			draw.RoundedBox(0,0,0,w,h,Color(255,255,255,250))
 			surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
-			draw.OutlinedBox( 0, 0, w, h,2,Color(0, 71, 152, 255) )
+			OutlinedBox( 0, 0, w, h,2,Color(0, 71, 152, 255))
 		end
 
 	local cdutilh = vgui.Create("HTML",cdutil)
@@ -105,13 +105,13 @@ net.Receive("OpenLoadingScreen", function(length)
 		cavt:SetPos(90,1010)
 		cavt:SetSize(250,50)
 		cavt.Paint = function(self,w,h)
-			draw.OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
+			OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
 		end
 		cavt:SetAlpha(0)
 
 	local cguok = vgui.Create("DCheckBoxLabel",base)
-		cguok:SetPos( 100, 1025 )						// Set the position
-		cguok:SetText( "J'ai lu les Conditions Generales d'Utilisation" )					// Set the text next to the box
+		cguok:SetPos( 100, 1025 )
+		cguok:SetText( "J'ai lu les Conditions Generales d'Utilisation" )
 		cguok:SetValue( 0 )
 		cguok:SizeToContents()
 
@@ -148,19 +148,11 @@ net.Receive("OpenLoadingScreen", function(length)
 				cavt:AlphaTo( 255 , 1, 0)
 			end
 		end
-
-
-
-
-
-end);
+end)
 
 net.Receive("CloseLoadingScreen", function(length)
 	ply = LocalPlayer();
 	chargementTermine = true
-
-
-
 	timer.Simple(3, function()
 		local reputation = ply:GetNWInt('reputation');
 		local reputationrp = ply:GetNWInt('reputationrp', 'new');
@@ -169,7 +161,7 @@ net.Receive("CloseLoadingScreen", function(length)
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Réputation RolePlay: " .. reputationrp);
 		chat.AddText( Color( 0, 250, 0 ), "[PS] Tapez !ppure dans le chat pour acceder directementà votre profil web")
 	end)
-end);
+end)
 
 net.Receive("CloseLoadingScreenErr", function(length)
 	timer.Simple(1, function()
@@ -177,4 +169,4 @@ net.Receive("CloseLoadingScreenErr", function(length)
 		base:Close()
 		chat.AddText( Color( 250, 0, 0 ), "[PS] Ce serveur n'est pas répertorié sur le Pure System");
 	end)
-end);
+end)
