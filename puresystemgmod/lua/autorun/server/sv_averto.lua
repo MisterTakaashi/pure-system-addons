@@ -17,23 +17,28 @@ end
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
 net.Receive( "averto", function( len, ply )
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
     addAverto( ply, net.ReadEntity(), net.ReadString() ,net.ReadInt( 4 ),net.ReadBool() )
 end )
 
 net.Receive( "kickto", function( len, ply )
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
     addKickto( ply, net.ReadEntity(), net.ReadString(), net.ReadInt( 4 ),net.ReadBool() )
 end)
 
 net.Receive( "banto", function( len, ply )
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
     addBanto( ply, net.ReadEntity(), net.ReadString(), net.ReadInt( 4 ), net.ReadFloat(),net.ReadBool() )
 end)
 
 net.Receive( "bantosteamid", function( len, ply )
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
     addBantoSteamID( ply, net.ReadString(), net.ReadString(), net.ReadInt( 4 ), net.ReadFloat(),net.ReadBool() )
 end)
 
 net.Receive( "afkick", function(len, ply)
-  addAFKick(ply, net.ReadEntity(),net.ReadString())
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
+    addAFKick(ply, net.ReadEntity(),net.ReadString())
 end)
 
 net.Receive( "rcgu", function(len, ply)
@@ -146,7 +151,7 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
             if (ply:SteamID() == steamid) then
                 ply:Kick("Banni par administrateur\nDurée: " .. (temp / 60) .. " minutes\nRaison: " .. raison)
             end
-        
+
             if temp != 0 then
                 ply:ChatPrint("[PS] " .. admin:Nick().." vient de bannir "..steamid.." pour ".. (temp / 60) .." minute(s). Raison : "..raison)
             else
@@ -158,13 +163,13 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
         print("[PS] Impossible de contacter le serveur Pure System...")
     end
     );
-  
+
     for k,v in pairs(player.GetAll()) do
       if (v:SteamID() == steamid) then
         v:Kick("Kick par administrateur\nRaison: " .. raison)
       end
     end
-    
+
     file.Append(PureLog,"\n".. os.date().."\tLe joueur : "..steamid.." a ete Banni du serveur par : "..admin:Nick())
 end
 
