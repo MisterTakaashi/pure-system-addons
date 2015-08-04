@@ -97,15 +97,6 @@ local function PurePanel()
         draw.DrawText( "X", "HudHintTextLarge", 10, 5, Color(128,128,128,255), TEXT_ALIGN_LEFT )
     end
 
-	local listh1 = vgui.Create("DPanel",base)
-		listh1:SetPos(0,25)
-		listh1:SetSize(160,25)
-		listh1.Paint =  function(self,w,h)
-			draw.RoundedBox(0,0,0,w,h,Color(80,80,80,255))
-			draw.DrawText( "Joueurs","Trebuchet18",82,5,Color(255,255,255,255),TEXT_ALIGN_CENTER)
-			surface.SetDrawColor(0,0,0)
-			surface.DrawOutlinedRect(0,0,w,h)
-		end
 
 	local listh2 = vgui.Create("DPanel",base)
 		listh2:SetPos(160,25)
@@ -162,6 +153,20 @@ local function PurePanel()
 	plylist.Paint = function()
 		draw.RoundedBox(0, 0, 0, plylist:GetWide(), plylist:GetTall(), Color(61,61,61,255))
 	end
+
+	local listh1 = vgui.Create("DButton",base)
+		listh1:SetPos(0,25)
+		listh1:SetSize(160,25)
+		listh1:SetText("")
+		listh1.Paint =  function(self,w,h)
+			draw.RoundedBox(0,0,0,w,h,Color(80,80,80,255))
+			draw.DrawText( "Joueurs","Trebuchet18",82,5,Color(255,255,255,255),TEXT_ALIGN_CENTER)
+			surface.SetDrawColor(0,0,0)
+			surface.DrawOutlinedRect(0,0,w,h)
+		end
+		listh1.DoClick = function()
+			plylist:SortByColumn( 1, false )
+		end
 
 	for k,v in pairs(player.GetAll()) do
 		reput = v:GetNWInt('reputation', 0 )
