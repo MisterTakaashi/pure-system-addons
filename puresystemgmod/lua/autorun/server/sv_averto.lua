@@ -47,6 +47,7 @@ net.Receive( "rcgu", function(len, ply)
 end)
 
 net.Receive( "freezetk", function(len,ply)
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
   targ = net.ReadEntity()
   targ:Freeze(true)
   targ:ChatPrint("Une sanction va tomber ! Vous êtes freeze !")
@@ -54,6 +55,7 @@ net.Receive( "freezetk", function(len,ply)
 end)
 
 net.Receive( "unfreezetk", function(len,ply)
+  if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
   targ = net.ReadEntity()
   targ:Freeze(false)
   targ:ChatPrint("Vous avez été unfreeze !")
