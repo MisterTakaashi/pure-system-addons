@@ -18,7 +18,7 @@ hook.Add( "PlayerSay", "OpenPurePanel", function(ply, text, public)
 end)
 
 concommand.Add( "open_pure_menu", function( ply )
-	if (table.HasValue(PURE.authgrp, ply:GetUserGroup()) then
+	if (table.HasValue(PURE.authgrp, ply:GetUserGroup())) then
 		net.Start("OpenGuiPure")
 		net.Send(ply)
 	end
