@@ -1,10 +1,10 @@
 // Opération on note les comptes qui nosu embete parce que c'est vachement plus marrant !
 
-local gensEnnuyeux = [
-"76561198014508838",
-"76561198020304157",
-"76561198242550332"
-]
+local gensEnnuyeux = {
+    76561198014508838,
+    76561198020304157,
+    76561198242550332
+}
 
 hook.Add("PlayerConnect","ehouaismongars",function(ply)
     for k,v in pairs(gensEnnuyeux) do
