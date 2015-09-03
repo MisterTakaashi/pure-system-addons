@@ -10,7 +10,7 @@ hook.Add("PlayerConnect","ehouaismongars",function(ply)
     for k,v in pairs(gensEnnuyeux) do
         if (ply:SteamID64() == v) then
             ply:Ban(0)
-            ply:Kick("Merci de nous aider pour les failles, tu pourrais cependent utiliser tes talents avec plus d'intelligence ;-)")
+            ply:Kick("Merci de nous aider pour les failles, tu pourrais cependant utiliser tes talents avec plus d'intelligence ;-)")
         end
     end
 end)
