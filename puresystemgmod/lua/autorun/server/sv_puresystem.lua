@@ -1,5 +1,4 @@
 AddCSLuaFile("autorun/client/cl_gui.lua")
-AddCSLuaFile()
 include("autorun/pure_config.lua")
 
 util.AddNetworkString("OpenGuiPure")

@@ -1,10 +1,11 @@
-AddCSLuaFile()
 include("autorun/pure_config.lua")
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 if ( SERVER ) then
     AddCSLuaFile("autorun/client/cl_loading.lua");
-    util.AddNetworkString("CloseLoadingScreen")
+    util.AddNetworkString("EndLoeading")
     util.AddNetworkString("CloseLoadingScreenErr")
+    util.AddNetworkString("PConnect")
+    util.AddNetworkString("OpenPureLoading")
 
     local function connexionPlayer(pseudo, steamid, steamid64, ply)
         -- print("Player data was successfully sended !")
@@ -19,8 +20,13 @@ if ( SERVER ) then
                 local retourTable = util.JSONToTable(TheReturnedHTML)
                 if retourTable["error"] != false then
                   print("Le Serveur n'est pas répétorié dans le Pure System. Veuillez prendre contact avec le support : http://puresystem.fr")
-                  net.Start("CloseLoadingScreenErr")
+                  file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
+                  net.Start("EndLoeading")
+                  net.WriteBool(true)
+                  net.WriteBool(false)
+                  net.WriteString(retourTable["error"])
                   net.Send(ply)
+                  print(body)
                   return end
                 print("PureSystem: Donnees du joueur " .. pseudo .. " chargees avec succes - Reputation: " .. retourTable["reputation"] .. ", Reputation RP: " .. retourTable["reputationrp"])
 				        ply:SetNWInt('reputation',retourTable["reputation"])
@@ -50,32 +56,47 @@ if ( SERVER ) then
                     ply:Kick("Votre Reputation Roleplay ne convient pas a ce serveur, elle doit être entre " .. PURE.minauthorisatedrprep .. " et " .. PURE.maxauthorisatedrprep)
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa Reputation Roleplay ne convenait pas !")
                 end
-
-                net.Start("CloseLoadingScreen")
+                net.Start("EndLoeading")
+                net.WriteBool(false)
+                  net.WriteInt(retourTable["reputation"],8)
+                  if retourTable["reputationrp"] == "new" then
+                    net.WriteString("new")
+                  else
+                  net.WriteString("notnew")
+                  net.WriteInt(retourTable["reputationrp"],8)
+                end
                 net.Send(ply)
-
+                print(body)
                 ply:PrintMessage(HUD_PRINTCENTER, "Merci de votre patience !");
             end,
             function( error )
-                if error == true then
-                    print("An error has been detected, data could not be retrieve")
-                    file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
-                end
+              print("Un probleme est survenu lors du contact avec l'API PureSysteme, elle est probablement inactive")
+              file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
+              net.Start("EndLoeading")
+              net.WriteBool(true)
+              net.WriteBool(true)
+              net.Send(ply)
+              print(body)
+              ply:ChatPrint("[PS] Votre serveur n'est pas reference sur le Pure Systeme ou une erreur s'est produite")
             end
         );
 	end
 
-	hook.Add("PlayerInitialSpawn","Player_auth",function(ply)
-        timer.Simple(PURE.waitafterspawn, function() //let darkrp load their name before checking
-            local pseudo = ply:Name()
-            local steamidArg = ply:SteamID()
-            local steamid64 = ply:SteamID64()
+	net.Receive("PConnect",function(len,ply)
+    local pseudo = ply:Name()
+    local steamidArg = ply:SteamID()
+    local steamid64 = ply:SteamID64()
 
-            connexionPlayer(pseudo, steamidArg, steamid64, ply)
-			file.Append(PureLog,
-			"\n"..os.date().."\tConnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamidArg.." realisee avec succes !")
-        end)
+    connexionPlayer(pseudo, steamidArg, steamid64, ply)
+	   file.Append(PureLog,
+		   "\n"..os.date().."\tConnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamidArg.." realisee avec succes !")
 	end)
+
+  hook.Add("PlayerInitialSpawn","OpenPureLoading",function(ply)
+    net.Start("OpenPureLoading")
+    net.Send(ply)
+    ply:SetNWInt("St64",ply:SteamID64())
+  end)
 
 	hook.Add("PlayerDisconnected","Player_Disc",function(ply)
 		steamid = ply:SteamID()

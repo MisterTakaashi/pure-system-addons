@@ -14,9 +14,6 @@ PURE = {}
 
 	PURE.authorisenewplayers = true //Authoriser les nouveaux joueurs
 
-	PURE.waitafterspawn = 5 //Nombre de secondes après le spawn pour faire requete vers API > A augmenter si le serveur met plus de temps pour requetter l'API
-
-	PURE.networkwait = 6 //Temps de chargement des networked variable avant affichage reputation dans tchat à la connexion
 	--------------------------------------------------------------------OnPeutToucher:D-----------------------------------------------------------
 	/* Ici vous touchez comme vous le voulez ,
 	c'est un fichier de config où vous pouvez changer les groupes pour le Pure System sur votre serveur par exemple !
@@ -34,6 +31,8 @@ PURE = {}
 		'superadmin',
 		'admin'
 	}
+
+	PURE.servname = "Serveur Dev PureSystem" // Indiquez ici le nom qui apparaitra sur le loading
 
 	PURE.port = 27015 -- IMPORTANT !!! --> Indiquez le port sur lequel tourne votre serveur habituellement c'est tres tres tres IMPORTANT !!!
 

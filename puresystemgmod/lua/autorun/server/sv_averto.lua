@@ -1,4 +1,3 @@
-AddCSLuaFile()
 include("autorun/pure_config.lua")
 util.AddNetworkString( "averto" )
 util.AddNetworkString( "kickto" )

@@ -1,9 +1,5 @@
-AddCSLuaFile("autorun/client/cl_loading.lua");
+util.AddNetworkString("Discon")
 
-util.AddNetworkString("OpenLoadingScreen");
-
-hook.Add("PlayerInitialSpawn","Loading_Initial_Spawn",function(ply)
-	ply:PrintMessage(HUD_PRINTCENTER, "Veuillez patienter PSB0t charge vos données...");
-	net.Start("OpenLoadingScreen")
-	net.Send(ply)
-end);
+net.Receive("Discon",function(len,ply)
+	ply:Kick("Vous vous êtes deconnecté du serveur")
+end)

@@ -1,8 +1,18 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
 
-closed = false
-chargementTermine = false
+local Color = Color;
+local hook = hook;
+local pgris = Color(18,21,25,254);
+local psgris = Color(18,21,25,0);
+local pbleu = Color(39,128,227,255);
+local pdorl = Color(241,193,0,125);
+local pdor = Color(241,193,0,255);
+local ptgris = Color(18,21,25,255);
+local pblack = Color(0,0,0,255);
+local pwhite = Color(250,250,250,255)
+local ply = LocalPlayer();
+
 
 local function OutlinedBox( x, y, w, h, thickness, clr )
 		surface.SetDrawColor( clr )
@@ -10,62 +20,205 @@ local function OutlinedBox( x, y, w, h, thickness, clr )
 			surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
 		end
 end
+function sload()
+	lframe = vgui.Create("DFrame")
+	lframe:SetPos(0,0)
+	lframe:SetSize(ScrW(),ScrH())
+	lframe:ShowCloseButton( false )
+	lframe:SetTitle("")
+	lframe:SetVisible( true )
+	lframe:MakePopup()
+	lframe.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+	end
 
-net.Receive("OpenLoadingScreen", function(length)
-	base = vgui.Create("DScrollPanel")
+	logoma = vgui.Create("DImage",lframe)
+	logoma:SetPos(ScrW()/2 - 250,ScrH()/2 - 250)
+	logoma:SetSize(500,500)
+	logoma:SetImage("resource/logo_marteaupure.png")
+
+	logoma:AlphaTo( 125, 0, 0)
+	logoma:AlphaTo( 10, 1, 1)
+	logoma:AlphaTo( 255, 1, 2)
+	logoma:AlphaTo( 10, 1, 3)
+	logoma:AlphaTo( 255, 1, 4)
+	logoma:AlphaTo( 10, 1, 5)
+	logoma:AlphaTo( 255, 1, 6)
+	logoma:AlphaTo( 10, 1, 7)
+	logoma:AlphaTo( 255, 1, 8)
+
+end
+
+local function sov(http)
+	if webpl != nil and webpl:IsVisible() then
+		webpl:Remove()
+	end
+	gui.OpenURL(http)
+end
+
+local function webpan(http)
+	if webpl != nil and webpl:IsVisible() then
+		webpl:Remove()
+	end
+	webpl = vgui.Create("DFrame",base)
+	webpl:SetPos(250,150)
+	webpl:SetSize(ScrW()-250,ScrH()-150)
+	webpl:SetDraggable(false)
+	webpl:SetTitle("")
+	webpl:ShowCloseButton(false)
+	webpl:SetVisible(true)
+	webpl:SetDeleteOnClose( true )
+	webpl:MakePopup()
+	webpl.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,pdor)
+	end
+
+
+
+	local html = vgui.Create( "HTML", webpl )
+	html:Dock( FILL )
+	html:OpenURL( http )
+end
+
+net.Receive("OpenPureLoading",function(len)
+	local base = vgui.Create("DFrame")
 	base:SetPos(0,0)
 	base:SetSize(ScrW(),ScrH())
 	base:SetVisible( true )
+	base:ShowCloseButton( false )
 	base:MakePopup()
 	base.Paint = function(self, w, h)
-		draw.RoundedBox(0,0,0,w,h,Color(250,250,250,255))
+		draw.RoundedBox(0,0,0,w,h,pgris)
 	end
 
-    closed = false
-
-	lgui = vgui.Create("DPanel",base)
-	lgui:SetPos(ScrW()/2 - 200,ScrH() - 100)
-	lgui:SetSize(400,100)
-	lgui.Paint = function(self,w,h)
-		draw.RoundedBox(0,0,0,w,h,Color(250, 250, 250,255))
-        if (chargementTermine == false) then
-            draw.DrawText( "Chargement ...", "CloseCaption_Bold", w/2, h/2 - 10, Color(160,160,160,255), TEXT_ALIGN_CENTER )
-        else
-            draw.DrawText( "Chargement terminé !", "CloseCaption_Bold", w/2, h/2 - 10, Color(160,160,160,255), TEXT_ALIGN_CENTER )
-        end
-	end
-	lgui:AlphaTo( 50, 2, 0)
-	lgui:AlphaTo( 255, 2, 2)
-	lgui:AlphaTo( 50 , 2, 4)
-	lgui:AlphaTo( 255 , 2, 6)
-	lgui:AlphaTo( 50 , 2, 8)
-	lgui:AlphaTo( 255 , 2, 10)
-	lgui:AlphaTo( 50 , 2, 12)
-	lgui:AlphaTo( 255 , 2, 14)
-	lgui:AlphaTo( 50 , 2, 16)
-	lgui:AlphaTo( 255 , 2, 18)
-	lgui:AlphaTo( 50 , 2, 20)
-	lgui:AlphaTo( 255 , 2, 22)
-	lgui:AlphaTo( 50 , 2, 24)
-	lgui:AlphaTo( 255 , 2, 26)
-
-
-	logserv = vgui.Create("DPanel")
-	logserv:SetParent(base)
+	local logserv = vgui.Create("DPanel",base)
 	logserv:SetSize(ScrW(),150)
 	logserv:SetPos(0,-150)
 	logserv.Paint = function(self, w, h)
-		draw.RoundedBox(0,0,0,w,h,Color(0, 71, 152, 255))
-		if chargementTermine == false then
-			draw.DrawText( "Le Pure System charge vos données. Patientez SVP !", "DermaLarge", w/2, h/2 - 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+	end
+	logserv:MoveTo( 0, 0, 3, 0, -1)
+
+	local purelogo = vgui.Create( "DImage", logserv )	-- Add image to Frame
+		purelogo:SetPos( (ScrW()/2 - 175), 30 )	-- Move it into frame
+		purelogo:SetSize( 350, 75 )	-- Size it to 150x150
+		purelogo:SetImage( "resource/logo_puresystem.png" )
+
+	local panint = vgui.Create("DPanel",base)
+	panint:SetPos(- 250,150)
+	panint:SetSize(250,ScrH() - 150)
+	panint.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+	end
+	panint:MoveTo(0,150,3,0,-1)
+
+	local ovcheck = vgui.Create( "DCheckBox",panint )// Create the checkbox
+		ovcheck:SetPos( 20, 470 )// Set the position
+		ovcheck:SetValue( 0 )// Initial value ( will determine whether the box is ticked too )
+
+	local chlbl = vgui.Create("DLabel",panint)
+		chlbl:SetPos(45,470)
+		chlbl:SetSize(150,20)
+		chlbl:SetText("Afficher les pages dans Steam")
+
+	local cobutt = vgui.Create("DButton",panint)
+	cobutt:SetPos(50,200)
+	cobutt:SetSize(150,40)
+	cobutt:SetText("")
+	cobutt.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+		draw.DrawText("Connexion","Trebuchet24",w/2,h/2,pwhite,TEXT_ALIGN_CENTER)
+	end
+	cobutt.DoClick = function()
+		if webpl != nil then
+			webpl:Remove()
+		end
+		net.Start("PConnect")
+		net.SendToServer()
+		sload()
+		base:Close()
+	end
+
+	local cgulab = vgui.Create("DButton",panint)
+	cgulab:SetPos(50,260)
+	cgulab:SetSize(150,40)
+	cgulab:SetText("")
+	cgulab.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+		draw.DrawText("Page CGU","Trebuchet24",w/2,h/2-5,pwhite,TEXT_ALIGN_CENTER)
+		draw.RoundedBox(0,0,0,w,1,pdor)
+	end
+	cgulab.DoClick = function()
+		local http = "http://puresystem.fr/cgu.html"
+		if ovcheck:GetChecked() then
+			sov(http)
 		else
-			draw.DrawText( "Le Pure System a chargé vos données !", "DermaLarge", w/2, h/2 - 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
+			webpan(http)
 		end
 	end
-	logserv:MoveTo( 0, 0, 10, 0, -1)
+
+	local sitlab = vgui.Create("DButton",panint)
+	sitlab:SetPos(50,310)
+	sitlab:SetSize(150,40)
+	sitlab:SetText("")
+	sitlab.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+		draw.RoundedBox(0,0,0,w,1,pdorl)
+		draw.DrawText("Page Du Site","Trebuchet24",w/2,h/2-5,pwhite,TEXT_ALIGN_CENTER)
+	end
+	sitlab.DoClick = function()
+		local http = "http://puresystem.fr"
+		if ovcheck:GetChecked() then
+			sov(http)
+		else
+			webpan(http)
+		end
+	end
+
+
+		local prolab = vgui.Create("DButton",panint)
+		prolab:SetPos(50,360)
+		prolab:SetSize(150,40)
+		prolab:SetText("")
+		prolab.Paint = function(self,w,h)
+			draw.RoundedBox(0,0,0,w,h,ptgris)
+			draw.DrawText("Votre Profil","Trebuchet24",w/2,h/2-5,pwhite,TEXT_ALIGN_CENTER)
+			draw.RoundedBox(0,0,0,w,1,pdorl)
+		end
+		prolab.DoClick = function()
+			local http = "http://puresystem.fr/id/"..ply:GetNWInt("St64").."/"
+			if ovcheck:GetChecked() then
+				sov(http)
+			else
+				webpan(http)
+			end
+		end
+
+
+	local decobut = vgui.Create("DButton",panint)
+	decobut:SetPos(50,410)
+	decobut:SetSize(150,40)
+	decobut:SetText("")
+	decobut.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,ptgris)
+		draw.DrawText("Deconnexion","Trebuchet24",w/2,h/2-5,pwhite,TEXT_ALIGN_CENTER)
+		draw.RoundedBox(0,0,0,w,1,pdorl)
+	end
+	decobut.DoClick = function()
+		net.Start("Discon")
+		net.SendToServer()
+	end
+
+	local servipan = vgui.Create("DPanel",base)
+	servipan:SetPos(250,500)
+	servipan:SetSize(ScrW()-250,250)
+	servipan.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,psgris)
+		draw.DrawText("Bienvenue sur le Serveur : "..PURE.servname,"DermaLarge",(w/2 - 125),h/2,pbleu,TEXT_ALIGN_CENTER)
+	end
 
 	if PURE.servlogo != nil then
-		logoser = vgui.Create("DImage")
+		local logoser = vgui.Create("DImage")
 		logoser:SetParent(base)
 		logoser:SetPos(ScrW()/2 - 230,250)
 		logoser:SetSize(460,215)
@@ -73,100 +226,24 @@ net.Receive("OpenLoadingScreen", function(length)
 		logoser:AlphaTo(50,1,0)
 		logoser:AlphaTo(255,3,1)
 	end
+end)
 
-	msgpro = vgui.Create("DPanel")
-	msgpro:SetParent(base)
-	msgpro:SetPos(0,500)
-	msgpro:SetSize(ScrW(), 100)
-	msgpro.Paint = function(self,w,h)
-		draw.RoundedBox(0,0,0,w,h,Color(250, 250, 250, 255))
-		draw.DrawText( "Serveur protégé par PureSystem.fr", "DermaLarge", w/2, h/2 - 10, Color(0, 71, 152, 255), TEXT_ALIGN_CENTER )
+net.Receive("EndLoeading",function(len)
+	lframe:Close()
+	if net.ReadBool() then
+		if net.ReadBool() then
+			chat.AddText(Color(255,0,0,255),"[PS] Une erreur s'est produite lors du chargement de vos données, le serveur est-il bien reference ?")
+		else
+			chat.AddText(Color(255,0,0,255),"[PS] "..net.ReadString())
+		end
+	else
+	chat.AddText(Color(0,255,0,255),"[PS] Vos données ont été chargées avec succès !")
+	chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation est de : "..net.ReadInt(8))
+	if net.ReadString() == "new" then
+		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : new")
+	else
+		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : "..net.ReadInt(8))
 	end
-
-	local cdutil = vgui.Create("DFrame", base)
-		cdutil:SetPos(100,600)
-		cdutil:SetSize(ScrW() - 200, 350)
-		cdutil:SetVisible( true )
-		cdutil:SetTitle( "" )
-		cdutil:SetDraggable( false )
-		cdutil:ShowCloseButton( false )
-		cdutil.Paint = function(self,w,h)
-			draw.RoundedBox(0,0,0,w,h,Color(255,255,255,250))
-			surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
-			OutlinedBox( 0, 0, w, h,2,Color(0, 71, 152, 255))
-		end
-
-	local cdutilh = vgui.Create("HTML",cdutil)
-	cdutilh:SetPos( 2, 2 )
-	cdutilh:SetSize(ScrW() - 204, 346)
-	cdutilh:OpenURL("puresystem.fr/cgu.html")
-
-	local cavt = vgui.Create("DPanel",base)
-		cavt:SetPos(90,1010)
-		cavt:SetSize(250,50)
-		cavt.Paint = function(self,w,h)
-			OutlinedBox(0,0,w,h,2,Color(255,0,0,255))
-		end
-		cavt:SetAlpha(0)
-
-	local cguok = vgui.Create("DCheckBoxLabel",base)
-		cguok:SetPos( 100, 1025 )
-		cguok:SetText( "J'ai lu les Conditions Generales d'Utilisation" )
-		cguok:SetValue( 0 )
-		cguok:SizeToContents()
-
-	local cgubutt1 = vgui.Create("DButton", base)
-		cgubutt1:SetPos(100,950)
-		cgubutt1:SetSize((cdutil:GetWide() /2),50)
-		cgubutt1:SetText("")
-		cgubutt1.Paint = function(self,w,h)
-			draw.RoundedBoxEx( 8, 0, 0, w, h, Color(0,190,0,210), false, false, true,false)
-			draw.DrawText( "Accepter les CGU", "DermaLarge", w/2 - 10, 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
-		end
-		cgubutt1.DoClick = function()
-			if cguok:GetChecked() == true then
-				base:Remove()
-			else
-				cavt:AlphaTo( 255 , 1, 0)
-			end
-		end
-
-
-	local cgubutt2 = vgui.Create("DButton",base)
-		cgubutt2:SetPos(cgubutt1:GetWide() + 100 ,950)
-		cgubutt2:SetSize((cdutil:GetWide() /2),50)
-		cgubutt2:SetText("")
-		cgubutt2.Paint = function(self,w,h)
-			draw.RoundedBoxEx( 8, 0, 0, w, h, Color(190,0,0,210), false, false, false,true)
-			draw.DrawText( "Refuser les CGU", "DermaLarge", w/2 - 10, 10, Color(250,250,250,255), TEXT_ALIGN_CENTER )
-		end
-		cgubutt2.DoClick = function()
-			if cguok:GetChecked() == true then
-				net.Start("rcgu")
-				net.SendToServer()
-			else
-				cavt:AlphaTo( 255 , 1, 0)
-			end
-		end
-end)
-
-net.Receive("CloseLoadingScreen", function(length)
-	ply = LocalPlayer();
-	chargementTermine = true
-	timer.Simple(3, function()
-		local reputation = ply:GetNWInt('reputation');
-		local reputationrp = ply:GetNWInt('reputationrp', 'new');
-		chat.AddText( Color( 0, 250, 0 ), "[PS] Chargement des données terminé, Bon jeu !");
-		chat.AddText( Color( 0, 250, 0 ), "[PS] Réputation: " .. reputation);
-		chat.AddText( Color( 0, 250, 0 ), "[PS] Réputation RolePlay: " .. reputationrp);
-		chat.AddText( Color( 0, 250, 0 ), "[PS] Tapez !ppure dans le chat pour acceder directementà votre profil web")
-	end)
-end)
-
-net.Receive("CloseLoadingScreenErr", function(length)
-	timer.Simple(1, function()
-		ply = LocalPlayer();
-		base:Close()
-		chat.AddText( Color( 250, 0, 0 ), "[PS] Ce serveur n'est pas répertorié sur le Pure System");
-	end)
+	chat.AddText(Color(0,255,0,255),"[PS] Pour acceder a votre profil tapez !ppure. Bon jeu à vous")
+	end
 end)
