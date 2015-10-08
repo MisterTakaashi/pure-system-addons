@@ -127,7 +127,7 @@ net.Receive("OpenPureLoading",function(len)
 	cobutt:SetText("")
 	cobutt.Paint = function(self,w,h)
 		draw.RoundedBox(0,0,0,w,h,ptgris)
-		draw.DrawText("Connexion","Trebuchet24",w/2,h/2,pwhite,TEXT_ALIGN_CENTER)
+		draw.DrawText("Entrer Serveur","Trebuchet24",w/2,h/2,pwhite,TEXT_ALIGN_CENTER)
 	end
 	cobutt.DoClick = function()
 		if webpl != nil then
