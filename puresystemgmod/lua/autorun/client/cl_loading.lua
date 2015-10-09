@@ -1,6 +1,7 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
 
+
 local Color = Color;
 local hook = hook;
 local pgris = Color(18,21,25,254);
@@ -14,12 +15,20 @@ local pwhite = Color(250,250,250,255)
 local ply = LocalPlayer();
 
 
+
+
+
 local function OutlinedBox( x, y, w, h, thickness, clr )
 		surface.SetDrawColor( clr )
 		for i=0, thickness - 1 do
 			surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
 		end
 end
+
+local function ptheme()
+
+end
+
 function sload()
 	lframe = vgui.Create("DFrame")
 	lframe:SetPos(0,0)
@@ -35,19 +44,21 @@ function sload()
 	logoma = vgui.Create("DImage",lframe)
 	logoma:SetPos(ScrW()/2 - 250,ScrH()/2 - 250)
 	logoma:SetSize(500,500)
-	logoma:SetImage("resource/logo_marteaupure.png")
+	logoma:SetImage("materials/puresystem/logo_marteaupure.png")
 
-	logoma:AlphaTo( 125, 0, 0)
-	logoma:AlphaTo( 10, 1, 1)
-	logoma:AlphaTo( 255, 1, 2)
-	logoma:AlphaTo( 10, 1, 3)
-	logoma:AlphaTo( 255, 1, 4)
-	logoma:AlphaTo( 10, 1, 5)
-	logoma:AlphaTo( 255, 1, 6)
-	logoma:AlphaTo( 10, 1, 7)
-	logoma:AlphaTo( 255, 1, 8)
+
+	timer.Create( "charglogo", 1, 1, function()
+
+		logoma:AlphaTo(10,1,0)
+		logoma:AlphaTo(255,1,1)
+		timer.Adjust( "charglogo", 3, 0, function()
+			logoma:AlphaTo(10,1,1)
+			logoma:AlphaTo(255,1,2)
+		end)
+	end)
 
 end
+
 
 local function sov(http)
 	if webpl != nil and webpl:IsVisible() then
@@ -72,8 +83,6 @@ local function webpan(http)
 	webpl.Paint = function(self,w,h)
 		draw.RoundedBox(0,0,0,w,h,pdor)
 	end
-
-
 
 	local html = vgui.Create( "HTML", webpl )
 	html:Dock( FILL )
@@ -102,7 +111,7 @@ net.Receive("OpenPureLoading",function(len)
 	local purelogo = vgui.Create( "DImage", logserv )	-- Add image to Frame
 		purelogo:SetPos( (ScrW()/2 - 175), 30 )	-- Move it into frame
 		purelogo:SetSize( 350, 75 )	-- Size it to 150x150
-		purelogo:SetImage( "resource/logo_puresystem.png" )
+		purelogo:SetImage( "materials/puresystem/logo_puresystem.png" )
 
 	local panint = vgui.Create("DPanel",base)
 	panint:SetPos(- 250,150)
@@ -120,6 +129,24 @@ net.Receive("OpenPureLoading",function(len)
 		chlbl:SetPos(45,470)
 		chlbl:SetSize(150,20)
 		chlbl:SetText("Afficher les pages dans Steam")
+
+		local thpanel = vgui.Create("DCheckBox",panint)
+		thpanel:SetPos(20,500)
+		thpanel:SetValue(0)
+		thpanel.OnChange = function()
+		  if thpanel:GetChecked() then
+				sound.PlayFile( "sound/puresystem/puresystemtheme.wav","", function( station )
+					if ( IsValid( station ) ) then station:Play() end
+					end )
+		  else
+		    RunConsoleCommand( "stopsound" )
+		  end
+		end
+
+	local thlbl = vgui.Create("DLabel",panint)
+	thlbl:SetPos(45,500)
+	thlbl:SetSize(150,20)
+	thlbl:SetText("Activer le PureMusiqueTheme")
 
 	local cobutt = vgui.Create("DButton",panint)
 	cobutt:SetPos(50,200)
@@ -194,7 +221,6 @@ net.Receive("OpenPureLoading",function(len)
 			end
 		end
 
-
 	local decobut = vgui.Create("DButton",panint)
 	decobut:SetPos(50,410)
 	decobut:SetSize(150,40)
@@ -226,24 +252,28 @@ net.Receive("OpenPureLoading",function(len)
 		logoser:AlphaTo(50,1,0)
 		logoser:AlphaTo(255,3,1)
 	end
+
+
 end)
 
 net.Receive("EndLoeading",function(len)
+	timer.Remove( "charglogo" )
 	lframe:Close()
-	if net.ReadBool() then
-		if net.ReadBool() then
+	RunConsoleCommand( "stopsound" )
+	print("temps connecte : "..os.difftime(ply:GetNWInt("timenserv"), os.time()))
+	local errortype = net.ReadString()
+	if errortype == "Error1" then
+		chat.AddText(Color(255,0,0,255),"[PS] "..net.ReadString())
+	elseif errortype == "Error2" then
 			chat.AddText(Color(255,0,0,255),"[PS] Une erreur s'est produite lors du chargement de vos données, le serveur est-il bien reference ?")
+	else
+		chat.AddText(Color(0,255,0,255),"[PS] Vos données ont été chargées avec succès !")
+		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation est de : "..net.ReadInt(8))
+		if errortype == "new" then
+			chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : new")
 		else
-			chat.AddText(Color(255,0,0,255),"[PS] "..net.ReadString())
+			chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : "..net.ReadInt(8))
 		end
-	else
-	chat.AddText(Color(0,255,0,255),"[PS] Vos données ont été chargées avec succès !")
-	chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation est de : "..net.ReadInt(8))
-	if net.ReadString() == "new" then
-		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : new")
-	else
-		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : "..net.ReadInt(8))
-	end
-	chat.AddText(Color(0,255,0,255),"[PS] Pour acceder a votre profil tapez !ppure. Bon jeu à vous")
+		chat.AddText(Color(0,255,0,255),"[PS] Pour acceder a votre profil tapez !ppure. Bon jeu à vous")
 	end
 end)

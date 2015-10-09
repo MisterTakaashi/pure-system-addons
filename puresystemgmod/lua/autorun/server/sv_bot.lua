@@ -8,43 +8,39 @@ if ( SERVER ) then
     util.AddNetworkString("OpenPureLoading")
 
     local function connexionPlayer(pseudo, steamid, steamid64, ply)
-        -- print("Player data was successfully sended !")
         local TheReturnedHTML = ""
-
         http.Fetch( "http://puresystem.fr/api/rest/connexion.php?port="..PURE.port.."&pseudo="..pseudo.."&steamid="..steamid.."&steamid64="..steamid64,
             function( body, len, headers, code )
                 TheReturnedHTML = body
-
-                -- print(TheReturnedHTML);
-
                 local retourTable = util.JSONToTable(TheReturnedHTML)
+                print(body)
                 if retourTable["error"] != false then
                   print("Le Serveur n'est pas répétorié dans le Pure System. Veuillez prendre contact avec le support : http://puresystem.fr")
                   file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
                   net.Start("EndLoeading")
-                  net.WriteBool(true)
-                  net.WriteBool(false)
-                  net.WriteString(retourTable["error"])
+                    net.WriteString("Error1")
+                    net.WriteString(retourTable["error"])
                   net.Send(ply)
                   print(body)
                   return end
+
+                  if retourTable["banned"] == true then
+                      ply:Kick("Vous avez été banni de ce serveur, take time to think\nRaison: "..retourTable["raison"])
+                      file.Append(PureLog,"\n".. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, il a ete ban du serveur !")
+                  end
+
                 print("PureSystem: Donnees du joueur " .. pseudo .. " chargees avec succes - Reputation: " .. retourTable["reputation"] .. ", Reputation RP: " .. retourTable["reputationrp"])
 				        ply:SetNWInt('reputation',retourTable["reputation"])
 
                 if retourTable["reputationrp"] != "new" then
-				                ply:SetNWInt('reputationrp',retourTable["reputationrp"])
+				              ply:SetNWInt('reputationrp',retourTable["reputationrp"])
                 end
 
-                if retourTable["banned"] == true then
-                    ply:Kick("Vous avez été banni de ce serveur, take time to think\nRaison: "..retourTable["raison"])
-                    file.Append(PureLog,"\n".. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, il a ete ban du serveur !")
 
-                end
 
                 if (retourTable["reputation"] < PURE.minauthorisedrep) or (retourTable["reputation"] >  PURE.maxauthorisedrep) then
                     ply:Kick("Votre Reputation ne convient pas a ce serveur, elle doit être entre " .. PURE.minauthorisedrep .. " et " .. PURE.maxauthorisedrep)
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa reputation ne convenait pas !")
-
                 end
 
                 if (retourTable["reputationrp"] == "new") and (PURE.authorisenewplayers == false) then
@@ -56,25 +52,25 @@ if ( SERVER ) then
                     ply:Kick("Votre Reputation Roleplay ne convient pas a ce serveur, elle doit être entre " .. PURE.minauthorisatedrprep .. " et " .. PURE.maxauthorisatedrprep)
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa Reputation Roleplay ne convenait pas !")
                 end
+
                 net.Start("EndLoeading")
-                net.WriteBool(false)
                   net.WriteInt(retourTable["reputation"],8)
                   if retourTable["reputationrp"] == "new" then
                     net.WriteString("new")
                   else
-                  net.WriteString("notnew")
-                  net.WriteInt(retourTable["reputationrp"],8)
-                end
+                    net.WriteString("notnew")
+                    net.WriteInt(retourTable["reputationrp"],8)
+                  end
                 net.Send(ply)
                 print(body)
                 ply:PrintMessage(HUD_PRINTCENTER, "Merci de votre patience !");
             end,
+
             function( error )
               print("Un probleme est survenu lors du contact avec l'API PureSysteme, elle est probablement inactive")
               file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
               net.Start("EndLoeading")
-              net.WriteBool(true)
-              net.WriteBool(true)
+                net.WriteString("Error2")
               net.Send(ply)
               print(body)
               ply:ChatPrint("[PS] Votre serveur n'est pas reference sur le Pure Systeme ou une erreur s'est produite")
@@ -96,6 +92,7 @@ if ( SERVER ) then
     net.Start("OpenPureLoading")
     net.Send(ply)
     ply:SetNWInt("St64",ply:SteamID64())
+    ply:SetNWInt("timenserv",os.time())
   end)
 
 	hook.Add("PlayerDisconnected","Player_Disc",function(ply)
