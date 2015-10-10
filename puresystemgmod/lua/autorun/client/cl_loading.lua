@@ -1,32 +1,26 @@
 AddCSLuaFile()
 include("autorun/pure_config.lua")
 
-
 local Color = Color;
 local hook = hook;
 local pgris = Color(18,21,25,254);
 local psgris = Color(18,21,25,0);
+local pvgris = Color(60,60,60,255);
 local pbleu = Color(39,128,227,255);
 local pdorl = Color(241,193,0,125);
 local pdor = Color(241,193,0,255);
 local ptgris = Color(18,21,25,255);
 local pblack = Color(0,0,0,255);
-local pwhite = Color(250,250,250,255)
+local pwhite = Color(250,250,250,255);
+local ReturnedHTMl = "";
+local version = "Beta-6.2";
 local ply = LocalPlayer();
-
-
-
-
 
 local function OutlinedBox( x, y, w, h, thickness, clr )
 		surface.SetDrawColor( clr )
 		for i=0, thickness - 1 do
 			surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
 		end
-end
-
-local function ptheme()
-
 end
 
 function sload()
@@ -56,9 +50,7 @@ function sload()
 			logoma:AlphaTo(255,1,2)
 		end)
 	end)
-
 end
-
 
 local function sov(http)
 	if webpl != nil and webpl:IsVisible() then
@@ -244,8 +236,7 @@ net.Receive("OpenPureLoading",function(len)
 	end
 
 	if PURE.servlogo != nil then
-		local logoser = vgui.Create("DImage")
-		logoser:SetParent(base)
+		local logoser = vgui.Create("DImage",base)
 		logoser:SetPos(ScrW()/2 - 230,250)
 		logoser:SetSize(460,215)
 		logoser:SetImage(PURE.servlogo[math.random( 1, #PURE.servlogo )])
@@ -254,6 +245,32 @@ net.Receive("OpenPureLoading",function(len)
 	end
 
 
+	http.Fetch( "https://api.github.com/repos/MisterTakaashi/pure-system-addons/releases/latest",
+		function( body, len, headers, code )
+	  	local TheReturnedHTML = body
+	  	local retourquipese = util.JSONToTable(TheReturnedHTML)
+			PrintTable( retourquipese )
+	  		if version and retourquipese["tag_name"] != version then
+					verlbl = vgui.Create( "DButton", base )
+					verlbl:SetPos( (ScrW()/2 - 250), 515 )
+					verlbl:SetSize( 500, 50 )
+					verlbl:SetText("")
+					verlbl.Paint = function(self,w,h)
+						draw.RoundedBox(0,0,0,w,h,pvgris)
+						draw.DrawText("Mise a jour du PureSystem disponible","Trebuchet24",w/2,h/2 - 12,pwhite,TEXT_ALIGN_CENTER)
+					end
+					verlbl.DoClick = function()
+						local http = "https://github.com/MisterTakaashi/pure-system-addons/releases/latest"
+						if ovcheck:GetChecked() then
+							sov(http)
+						else
+							webpan(http)
+						end
+					end
+				end
+			end,
+			function(error)
+			end);
 end)
 
 net.Receive("EndLoeading",function(len)
@@ -261,18 +278,18 @@ net.Receive("EndLoeading",function(len)
 	lframe:Close()
 	RunConsoleCommand( "stopsound" )
 	print("temps connecte : "..os.difftime(ply:GetNWInt("timenserv"), os.time()))
-	local errortype = net.ReadString()
-	if errortype == "Error1" then
-		chat.AddText(Color(255,0,0,255),"[PS] "..net.ReadString())
-	elseif errortype == "Error2" then
+	local recTab = net.ReadTable()
+	if recTab.State == "Error1" then
+		chat.AddText(Color(255,0,0,255),"[PS] "..recTab.Error)
+	elseif recTab.State == "Error2" then
 			chat.AddText(Color(255,0,0,255),"[PS] Une erreur s'est produite lors du chargement de vos données, le serveur est-il bien reference ?")
 	else
 		chat.AddText(Color(0,255,0,255),"[PS] Vos données ont été chargées avec succès !")
-		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation est de : "..net.ReadInt(8))
+		chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation est de : "..recTab.Rep)
 		if errortype == "new" then
 			chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : new")
 		else
-			chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : "..net.ReadInt(8))
+			chat.AddText(Color(0,255,0,255),"[PS] Votre Reputation RP est de : "..recTab.RepRp)
 		end
 		chat.AddText(Color(0,255,0,255),"[PS] Pour acceder a votre profil tapez !ppure. Bon jeu à vous")
 	end

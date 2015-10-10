@@ -9,19 +9,19 @@ if ( SERVER ) then
 
     local function connexionPlayer(pseudo, steamid, steamid64, ply)
         local TheReturnedHTML = ""
+        local recTab = {}
         http.Fetch( "http://puresystem.fr/api/rest/connexion.php?port="..PURE.port.."&pseudo="..pseudo.."&steamid="..steamid.."&steamid64="..steamid64,
             function( body, len, headers, code )
-                TheReturnedHTML = body
+                local TheReturnedHTML = body
                 local retourTable = util.JSONToTable(TheReturnedHTML)
-                print(body)
                 if retourTable["error"] != false then
                   print("Le Serveur n'est pas répétorié dans le Pure System. Veuillez prendre contact avec le support : http://puresystem.fr")
                   file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
+                  recTab.State = "Error1"
+                  recTab.Error = retourTable["error"]
                   net.Start("EndLoeading")
-                    net.WriteString("Error1")
-                    net.WriteString(retourTable["error"])
+                    net.WriteTable(recTab)
                   net.Send(ply)
-                  print(body)
                   return end
 
                   if retourTable["banned"] == true then
@@ -53,14 +53,11 @@ if ( SERVER ) then
                     file.Append(PureLog,"\n" .. os.date().."\tConnexion du Joueur : "..ply:Name().." avec Steamid : "..steamid.." refusee, sa Reputation Roleplay ne convenait pas !")
                 end
 
+                recTab.State = "ok"
+                recTab.Rep = retourTable["reputation"]
+                recTab.RepRp = retourTable["reputationrp"]
                 net.Start("EndLoeading")
-                  net.WriteInt(retourTable["reputation"],8)
-                  if retourTable["reputationrp"] == "new" then
-                    net.WriteString("new")
-                  else
-                    net.WriteString("notnew")
-                    net.WriteInt(retourTable["reputationrp"],8)
-                  end
+                  net.WriteTable(recTab)
                 net.Send(ply)
                 print(body)
                 ply:PrintMessage(HUD_PRINTCENTER, "Merci de votre patience !");
@@ -69,8 +66,9 @@ if ( SERVER ) then
             function( error )
               print("Un probleme est survenu lors du contact avec l'API PureSysteme, elle est probablement inactive")
               file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
+              recTab.State = "Error2"
               net.Start("EndLoeading")
-                net.WriteString("Error2")
+                net.WriteTable(rectab)
               net.Send(ply)
               print(body)
               ply:ChatPrint("[PS] Votre serveur n'est pas reference sur le Pure Systeme ou une erreur s'est produite")
