@@ -6,8 +6,9 @@ if ( SERVER ) then
     util.AddNetworkString("CloseLoadingScreenErr")
     util.AddNetworkString("PConnect")
     util.AddNetworkString("OpenPureLoading")
+    apinco = {}
 
-    local function connexionPlayer(pseudo, steamid, steamid64, ply)
+    function connexionPlayer(pseudo, steamid, steamid64, ply)
         local TheReturnedHTML = ""
         local recTab = {}
         http.Fetch( "http://puresystem.fr/api/rest/connexion.php?port="..PURE.port.."&pseudo="..pseudo.."&steamid="..steamid.."&steamid64="..steamid64,
@@ -56,6 +57,12 @@ if ( SERVER ) then
                 recTab.State = "ok"
                 recTab.Rep = retourTable["reputation"]
                 recTab.RepRp = retourTable["reputationrp"]
+                for m,r in pairs(apinco) do
+                  if r == ply:SteamID64() then
+                    table.remove(apinco,table.RemoveByValue(apinco, ply:SteamID64()))
+                    PrintTable(apinco)
+                  end
+                end
                 net.Start("EndLoeading")
                   net.WriteTable(recTab)
                 net.Send(ply)
@@ -81,6 +88,7 @@ if ( SERVER ) then
     local steamidArg = ply:SteamID()
     local steamid64 = ply:SteamID64()
 
+
     connexionPlayer(pseudo, steamidArg, steamid64, ply)
 	   file.Append(PureLog,
 		   "\n"..os.date().."\tConnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamidArg.." realisee avec succes !")
@@ -89,8 +97,7 @@ if ( SERVER ) then
   hook.Add("PlayerInitialSpawn","OpenPureLoading",function(ply)
     net.Start("OpenPureLoading")
     net.Send(ply)
-    ply:SetNWInt("St64",ply:SteamID64())
-    ply:SetNWInt("timenserv",os.time())
+    table.insert(apinco,ply:SteamID64())
   end)
 
 	hook.Add("PlayerDisconnected","Player_Disc",function(ply)
@@ -99,3 +106,17 @@ if ( SERVER ) then
 			"\n"..os.date().."\tDeconnexion du joueur : " .. ply:Name() .. " avec SteamID : "..steamid.." se deconnecte !")
 	end)
 end
+
+timer.Create("checkapi",120,0, function()
+  for k,v in pairs(player.GetAll()) do
+    for x,y in pairs(apinco) do
+      if v:SteamID64() == y then
+        local pseudo = v:Name()
+        local steamidArg = v:SteamID()
+        local steamid64 = v:SteamID64()
+        connexionPlayer(pseudo, steamidArg, steamid64, v)
+        print("Check du call api")
+      end
+    end
+  end
+end)
