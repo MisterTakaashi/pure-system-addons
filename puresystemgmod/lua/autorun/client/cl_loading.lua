@@ -13,7 +13,7 @@ local ptgris = Color(18,21,25,255);
 local pblack = Color(0,0,0,255);
 local pwhite = Color(250,250,250,255);
 local ReturnedHTMl = "";
-local version = "Beta-6.2";
+local version = "Beta-6.2.1";
 local ply = LocalPlayer();
 
 local function OutlinedBox( x, y, w, h, thickness, clr )
