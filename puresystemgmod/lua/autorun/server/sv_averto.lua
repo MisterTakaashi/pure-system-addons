@@ -8,16 +8,101 @@ util.AddNetworkString( "rcgu" )
 util.AddNetworkString( "freezetk" )
 util.AddNetworkString( "unfreezetk" )
 util.AddNetworkString( "sunfrezz" )
+util.AddNetworkString( "avertgot" )
+
+
 
 for k,v in pairs(player.GetAll()) do
     v:SetNWBool("freezed",false)
+    v:SetNWBool("jailed",false)
 end
 
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
+local function AJail(ply,ajtime)
+  if ply:GetNWBool("jailed") ==  true or not ply:IsValid() then
+    return
+  end
+  local targets = {}
+  local pjt = ajtime
+  print("ajtime = ".. pjt)
+  local jailDist = 70
+  table.insert(targets,ply)
+
+  for _,target in pairs(targets) do
+    if target:GetNWBool("jailed") == true then return end
+    target:ExitVehicle()
+
+    target:SetNWBool("jailed",true)
+    target.jailpos = target:GetPos()
+    target.jailprops = {}
+    target.weapons = {}
+    for k,v in pairs(target:GetWeapons()) do
+      table.insert(target.weapons,v:GetClass())
+    end
+
+    target:StripWeapons()
+
+    local ajailprops = {
+      {pos = Vector(0,0,-5), ang = Angle(90,0,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(0,0,97), ang = Angle(90,0,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(21,31,46), ang = Angle(0,90,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(21,-31,46), ang = Angle(0,90,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(-21,31,46), ang = Angle(0,90,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(-21,-31,46), ang = Angle(0,90,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(-52,0,46), ang = Angle(0,0,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"},
+      {pos = Vector(52,0,46), ang = Angle(0,0,0), model = "models/props_building_details/Storefront_Template001a_Bars.mdl"}
+    }
+
+    for k,v in pairs(ajailprops) do
+        local ajailprop = ents.Create("purejail")
+        ajailprop:SetPos(target:GetPos() + v.pos)
+        ajailprop:SetAngles(v.ang)
+        ajailprop:SetModel(v.model)
+        ajailprop:Spawn()
+        ajailprop:Activate()
+        ajailprop.target = target
+        ajailprop.targetPos = target.jailpos
+        target.jailprops[ajailprop] = true
+      end
+
+      if pjt > 0 then
+        timer.Create("Ajtime"..target:UserID(), pjt, 1, function()
+          if ply:GetNWBool("jailed") == false then return end
+          ply:SetNWBool("jailed",false)
+          print("Tu est relache de prison")
+          timer.Remove("Ajail_check" ..ply:UserID())
+          for k, v in pairs(target.jailprops) do
+            if not IsValid(k) then continue end
+            k:Remove()
+          end
+          for k,v in pairs(target.weapons) do
+            ply:Give(v)
+          end
+        end)
+
+
+        timer.Create("Ajail_check" ..target:UserID() ,1,0,function()
+          if not IsValid(ply) or ply:GetNWBool("jailed") == false  then
+            timer.Remove("Ajail_check" ..ply:UserID() )
+            return
+          end
+          if target:GetPos():DistToSqr(target.jailpos) > jailDist then
+            target:SetPos(target.jailpos)
+          end
+        end)
+      end
+end
+end
+
+hook.Add("PlayerSpawn","PureJailSC",function(ply)
+  if ply:GetNWBool("jailed") == true then
+  end
+end)
+
 net.Receive( "averto", function( len, ply )
     if !(table.HasValue(PURE.authgrp, ply:GetUserGroup())) then return end
-    addAverto( ply, net.ReadEntity(), net.ReadString() ,net.ReadInt( 4 ),net.ReadBool() )
+    addAverto( ply, net.ReadEntity(), net.ReadString() ,net.ReadInt( 4 ),net.ReadBool(),net.ReadBool(),net.ReadInt(8) )
 end )
 
 net.Receive( "kickto", function( len, ply )
@@ -71,13 +156,20 @@ net.Receive( "sunfrezz", function()
     end
 end)
 
-
-function addAverto(admin, target, detail, sev, rp)
+ function addAverto(admin, target, detail, sev, rp, ajail, ajtime)
     if !(table.HasValue(PURE.authgrp, admin:GetUserGroup())) then return end
     //print( admin:Nick().." vient de mettre un avertissement à "..target:Nick()..". Détails : "..detail)
 
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
+    net.Start("avertgot")
+      net.WriteString(admin:Nick())
+      net.WriteString(detail)
+    net.Send(target)
+
+    if ajail == true then
+      AJail(target,ajtime)
+    end
     http.Fetch( "http://puresystem.fr/api/rest/avertissement.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. detail .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
     function( body, len, headers, code )
 		local retourTable = util.JSONToTable(body)

@@ -20,12 +20,14 @@ local function unfreezetk(target)
 	net.SendToServer()
 end
 
-local function addAverto(target,detail,sev,rp)
+local function addAverto(target,detail,sev,rp,ajail,ajtime)
 	net.Start( "averto" )
-	net.WriteEntity( target )
-	net.WriteString( detail )
-	net.WriteInt( sev, 4 )
-	net.WriteBool( rp )
+		net.WriteEntity( target )
+		net.WriteString( detail )
+		net.WriteInt( sev, 4 )
+		net.WriteBool( rp )
+		net.WriteBool( ajail )
+		net.WriteInt( ajtime, 8)
 	net.SendToServer()
 end
 
@@ -302,27 +304,6 @@ local function PurePanel()
 			infourl:SetURL( "http://puresystem.fr/id/"..line:GetValue(5).."/" )
 		end)
 		btnInfos:SetIcon("icon16/user.png")
-			/*local infoban = vgui.Create( "DLabel" )
-			infoban:SetParent( infopnl1 )
-			infoban:SetPos( 150, 170 )
-			infoban:SetText( "Bans : 0 " ) -- Compabilisation des bans aprendre en compte
-			infoban:SetColor( Color( 255, 255, 255, 255 ) )
-			infoban:SetFont( "Trebuchet24" )
-			infoban:SizeToContents()
-
-			local infoav = vgui.Create( "DLabel" )
-			infoav:SetParent( infopnl1 )
-			infoav:SetPos( 150, 190 )
-			infoav:SetText( "Avertissements : 0 " ) -- Compabilisation des avertissements aprendre en compte
-			infoav:SetColor( Color( 255, 255, 255, 255 ) )
-			infoav:SetFont( "Trebuchet24" )
-			infoav:SizeToContents()*/
-
-		-- local btnGoto = menu:AddOption("Goto", Goto(LocalPlayer(), getPlayerFromSteamId64(line:GetValue(5)) ))
-		-- btnGoto:SetIcon("icon16/arrow_merge.png")
-
-		-- local btnSpec = menu:AddOption( "Observer" )
-		-- btnSpec:SetIcon("icon16/eye.png")
 
 		local btnAvert = menu:AddOption("Avertissement", function()
 
@@ -330,8 +311,8 @@ local function PurePanel()
 
 			local averpan = vgui.Create ( "DFrame" )
 			averpan:SetParent( base )
-			averpan:SetPos(ScrW() / 2 - 200, ScrH() / 2 - 135)
-			averpan:SetSize( 400, 270 )
+			averpan:SetPos(ScrW() / 2 - 200, ScrH() / 2 - 125)
+			averpan:SetSize( 400, 350 )
 			averpan:SetTitle( "Panneau d'Avertissement" )
 			averpan:SetDraggable( true )
 			averpan:SetBackgroundBlur( true )
@@ -380,14 +361,7 @@ local function PurePanel()
 			avertSevlbl:SetFont( "Trebuchet18" )
 			avertSevlbl:SetText( "Sévérité de l'avertissement : ")
 
-			/*local aversev = vgui.Create ("Slider")
-			aversev:SetParent( averpan )
-			aversev:SetPos( 10, 130 )
-			aversev:SetWide( averpan:GetWide() - 20 )
-			aversev:SetMin( 1 )
-			aversev:SetMax( 3 )
-			aversev:SetValue( 1 )
-			aversev:SetDecimals( 0 )*/
+
 
 			local asev = 0
 
@@ -486,15 +460,53 @@ local function PurePanel()
 			averRpCheckLbl:SetText( "Oui" )
 			averRpCheckLbl:SizeToContents()
 
+			local jailabel = vgui.Create("DLabel",averpan)
+			jailabel:SetPos(40,210)
+			jailabel:SetText("Jail le Joueur")
+			jailabel:SizeToContents()
+
+			local jailcheck = vgui.Create("DCheckBox",averpan)
+			jailcheck:SetPos(20, 210)
+			jailcheck:SetValue(0)
+			jailcheck.OnChange = function()
+				if jailcheck:GetChecked() == true then
+
+					jailtime = vgui.Create("DNumberWang",averpan)
+					jailtime:SetPos(20,230)
+					jailtime:SetSize(35,20)
+					jailtime:SetMinMax( 0, 60 )
+
+					jailticonv = vgui.Create("DComboBox",averpan)
+					jailticonv:SetPos(65,230)
+					jailticonv:SetSize( 75, 20 )
+					jailticonv:SetValue( "Minute(s)" )
+					jailticonv:AddChoice( "Seconde(s)" )
+					jailticonv:AddChoice( "Minute(s)" )
+				elseif jailtime or jailticonv then
+						jailtime:Close()
+						jailticonv:Close()
+				end
+			end
+
 			local averbtn = vgui.Create ( "DButton" )
 			averbtn:SetParent( averpan )
-			averbtn:SetPos( 10, 210 )
+			averbtn:SetPos( 10, 300 )
 			averbtn:SetSize( averpan:GetWide() - 20, 40 )
 			averbtn:SetText( "" )
 			averbtn.DoClick = function()
 				adetail = avertxt:GetValue()
 				arp = averRpCheck:GetChecked()
-				addAverto(getPlayerFromSteamId64(line:GetValue(5)),adetail,asev,arp)
+				ajail = jailcheck:GetChecked()
+				ajtime = 0
+				if ajail == true then
+					if jailticonv:GetValue() == "Minute(s)" then
+						ajtime = jailtime:GetValue() * 60
+					else
+						ajtime = jailtime:GetValue()
+					end
+				end
+				print("ajtime = "..ajtime )
+				addAverto(getPlayerFromSteamId64(line:GetValue(5)),adetail,asev,arp,ajail,ajtime)
 				averpan:Close()
 			end
 			averbtn.Paint = function(self, w, h)
@@ -564,15 +576,6 @@ local function PurePanel()
 			kserlab:SetFont( "Trebuchet18" )
 			kserlab:SetText( "Sévérité du kick :" )
 			kserlab:SizeToContents()
-
-			/*local kickser = vgui.Create( "Slider" )
-			kickser:SetParent( kickpan )
-			kickser:SetPos ( 10, 130 )
-			kickser:SetWide( kickpan:GetWide() - 20 )
-			kickser:SetMin( 1 )
-			kickser:SetMax( 3 )
-			kickser:SetValue( 1 )
-			kickser:SetDecimals( 0 )*/
 
 			local ksev = 0
 
@@ -1317,6 +1320,28 @@ local banSteamid = vgui.Create( "DButton" )
 
 end
 
+net.Receive("avertgot", function(len)
+	local adm = net.ReadString()
+	local res = net.ReadString()
+	local notav = vgui.Create("DFrame")
+	notav:SetSize(500,150)
+	notav:SetPos(ScrW()/2-75,ScrH()/2 - 25)
+	notav:ShowCloseButton(false)
+	notav:SetDraggable(false)
+	notav:SetTitle("PureNotify")
+	notav.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,Color(65,65,65))
+		draw.DrawText( adm.." vous a mis un avertissement", "Trebuchet24", w/2, 30, Color(255,255,255,255), TEXT_ALIGN_CENTER )
+		draw.DrawText( "Raison : "..res, "Trebuchet18", w/2, 100, Color(255,255,255,255), TEXT_ALIGN_CENTER )
+	end
+
+	timer.Simple(10,function()
+		if notav then
+			notav:Close()
+		end
+	end)
+
+end)
 
 net.Receive("OpenGuiPure", function(length)
 	chat.AddText( Color( 100, 100, 255 ), "Ouverture du menu Pure System...")
