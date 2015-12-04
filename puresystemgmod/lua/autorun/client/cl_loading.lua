@@ -103,7 +103,7 @@ net.Receive("OpenPureLoading",function(len)
 
 	local purelogo = vgui.Create( "DImage", logserv )	-- Add image to Frame
 		purelogo:SetPos( (ScrW()/2 - 175), 30 )	-- Move it into frame
-		purelogo:SetSize( 350, 75 )	-- Size it to 150x150
+		purelogo:SetSize( 350, 75 )
 		purelogo:SetImage( "materials/puresystem/logo_puresystem.png" )
 
 	local panint = vgui.Create("DPanel",base)
@@ -276,7 +276,9 @@ end)
 
 net.Receive("EndLoeading",function(len)
 	timer.Remove( "charglogo" )
-	lframe:Close()
+	if lframe then
+		lframe:Close()
+	end
 	RunConsoleCommand( "stopsound" )
 	print("temps connecte : "..os.difftime(ply:GetNWInt("timenserv"), os.time()))
 	local recTab = net.ReadTable()
