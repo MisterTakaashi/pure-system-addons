@@ -250,7 +250,7 @@ net.Receive("OpenPureLoading",function(len)
 		function( body, len, headers, code )
 	  	local TheReturnedHTML = body
 	  	local retourquipese = util.JSONToTable(TheReturnedHTML)
-			PrintTable( retourquipese )
+			--PrintTable( retourquipese )
 	  		if version and retourquipese["tag_name"] != version then
 					verlbl = vgui.Create( "DButton", base )
 					verlbl:SetPos( (ScrW()/2 - 250), 515 )
