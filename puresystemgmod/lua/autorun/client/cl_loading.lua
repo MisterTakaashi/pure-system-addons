@@ -277,7 +277,7 @@ end)
 net.Receive("EndLoeading",function(len)
 	timer.Remove( "charglogo" )
 	if lframe then
-		lframe:Close()
+		lframe:Remove()
 	end
 	RunConsoleCommand( "stopsound" )
 	print("temps connecte : "..os.difftime(ply:GetNWInt("timenserv"), os.time()))

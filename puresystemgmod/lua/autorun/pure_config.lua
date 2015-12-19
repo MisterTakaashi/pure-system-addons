@@ -5,7 +5,7 @@ PURE = {}
 
 /* Ici vous touchez comme vous le voulez ,
 c'est un fichier de config où vous pouvez changer les groupes pour le Pure System sur votre serveur par exemple !
-Certaines valeurs se changent que sur la page du serveur sur le Site : http://puresystem.fr !!Pas encore implementé!!
+Certaines valeurs se changent que sur la page du serveur sur le Site : http://puresystem.fr !! Pas encore implementé!!
 
 Merci de faire confience au PureSystem !
 Bonne Config et Bisous !
