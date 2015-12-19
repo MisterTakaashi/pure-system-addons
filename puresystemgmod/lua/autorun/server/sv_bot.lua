@@ -11,7 +11,14 @@ if ( SERVER ) then
     function connexionPlayer(pseudo, steamid, steamid64, ply)
         local TheReturnedHTML = ""
         local recTab = {}
-        http.Fetch( "http://puresystem.fr/api/rest/connexion.php?port="..PURE.port.."&pseudo="..pseudo.."&steamid="..steamid.."&steamid64="..steamid64,
+
+        local params = {}
+        params["port"] = PURE.port
+        params["pseudo"] = pseudo
+        params["steamid"] = steamid
+        params["steamid64"] = steamid64
+
+        http.Post( "http://puresystem.fr/api/rest/connexion.php", params,
             function( body, len, headers, code )
                 local TheReturnedHTML = body
                 local retourTable = util.JSONToTable(TheReturnedHTML)

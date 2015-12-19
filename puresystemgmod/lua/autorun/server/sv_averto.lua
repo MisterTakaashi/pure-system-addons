@@ -170,7 +170,21 @@ end)
     if ajail == true then
       AJail(target,ajtime)
     end
-    http.Fetch( "http://puresystem.fr/api/rest/avertissement.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. detail .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
+
+    local params = {}
+    params["port"] = PURE.port
+    params["pseudo"] = target:Nick()
+    params["steamid"] = target:SteamID()
+    params["steamid64"] = target:SteamID64()
+    params["admin_pseudo"] = admin:Nick()
+    params["admin_steamid"] = admin:SteamID()
+    params["admin_steamid64"] = admin:SteamID64()
+    params["raison"] = detail
+    print("Severite: " .. tostring(sev))
+    params["severite"] = tostring(sev)
+    params["relatifrp"] = tostring(rp)
+
+    http.Post( "http://puresystem.fr/api/rest/avertissement.php", params,
     function( body, len, headers, code )
 		local retourTable = util.JSONToTable(body)
         if retourTable["error"] == false then
@@ -194,7 +208,19 @@ function addKickto(admin, target, raison, sev, rp)
     if !(table.HasValue(PURE.authgrp, admin:GetUserGroup())) then return end
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
-    http.Fetch( "http://puresystem.fr/api/rest/kick.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&relatifrp=".. tostring(rp) .."",
+    local params = {}
+    params["port"] = PURE.port
+    params["pseudo"] = target:Nick()
+    params["steamid"] = target:SteamID()
+    params["steamid64"] = target:SteamID64()
+    params["admin_pseudo"] = admin:Nick()
+    params["admin_steamid"] = admin:SteamID()
+    params["admin_steamid64"] = admin:SteamID64()
+    params["raison"] = raison
+    params["severite"] = tostring(sev)
+    params["relatifrp"] = tostring(rp)
+
+    http.Post( "http://puresystem.fr/api/rest/kick.php", params,
     function( body, len, headers, code )
 		local retourTable = util.JSONToTable(body)
         if retourTable["error"] == false then
@@ -223,7 +249,20 @@ function addBanto(admin, target, raison, sev, temp, rp)
 
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
-    http.Fetch( "http://puresystem.fr/api/rest/ban.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."",
+    local params = {}
+    params["port"] = PURE.port
+    params["pseudo"] = target:Nick()
+    params["steamid"] = target:SteamID()
+    params["steamid64"] = target:SteamID64()
+    params["admin_pseudo"] = admin:Nick()
+    params["admin_steamid"] = admin:SteamID()
+    params["admin_steamid64"] = admin:SteamID64()
+    params["raison"] = raison
+    params["severite"] = tostring(sev)
+    params["duree"] = temp
+    params["relatifrp"] = tostring(rp)
+
+    http.Post( "http://puresystem.fr/api/rest/ban.php", params,
     function( body, len, headers, code )
 		local retourTable = util.JSONToTable(body)
         if retourTable["error"] == false then
@@ -255,7 +294,19 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
 
     print("Je demande la page: \n\nhttp://puresystem.fr/api/rest/ban.php?port="..PURE.port.."&steamid64=".. steamid .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."")
 
-    http.Fetch( "http://puresystem.fr/api/rest/ban.php?port="..PURE.port.."&steamid64=".. steamid .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."",
+    local params = {}
+    params["port"] = PURE.port
+    params["pseudo"] = target:Nick()
+    params["steamid64"] = steamid
+    params["admin_pseudo"] = admin:Nick()
+    params["admin_steamid"] = admin:SteamID()
+    params["admin_steamid64"] = admin:SteamID64()
+    params["raison"] = raison
+    params["severite"] = tostring(sev)
+    params["duree"] = tostring(temp)
+    params["relatifrp"] = tostring(rp)
+
+    http.Post( "http://puresystem.fr/api/rest/ban.php", params,
     function( body, len, headers, code )
 		local retourTable = util.JSONToTable(body)
         if retourTable["error"] == false then
@@ -292,7 +343,16 @@ end
 function addAFKick(admin,target,raison)
     if !(table.HasValue(PURE.authgrp, admin:GetUserGroup())) then return end
 
-    http.Fetch( "http://puresystem.fr/api/rest/afkick.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."",
+    local params = {}
+    params["port"] = PURE.port
+    params["pseudo"] = target:Nick()
+    params["steamid"] = target:SteamID()
+    params["steamid64"] = target:SteamID64()
+    params["admin_pseudo"] = admin:Nick()
+    params["admin_steamid"] = admin:SteamID()
+    params["admin_steamid64"] = admin:SteamID64()
+
+    http.Post( "http://puresystem.fr/api/rest/afkick.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64() .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."", params,
     function( body, len, headers, code )
 		local retourTable = util.JSONToTable(body)
         if retourTable["error"] == false then
@@ -309,7 +369,13 @@ function addAFKick(admin,target,raison)
 end
 
 function getNewreput(target)
-    http.Fetch( "http://puresystem.fr/api/rest/getinfos.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64(),
+    local params = {}
+    params["port"] = PURE.port
+    params["pseudo"] = target:Nick()
+    params["steamid"] = target:SteamID()
+    params["steamid64"] = target:SteamID64()
+
+    http.Post( "http://puresystem.fr/api/rest/getinfospost.php?port="..PURE.port.."&pseudo=".. target:Nick() .."&steamid=".. target:SteamID() .."&steamid64=".. target:SteamID64(), params,
     function( body, len, headers, code )
         TheReturnedHTML = body
         local retourTable = util.JSONToTable(TheReturnedHTML)
