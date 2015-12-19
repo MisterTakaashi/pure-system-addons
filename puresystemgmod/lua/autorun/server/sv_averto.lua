@@ -296,7 +296,6 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
 
     local params = {}
     params["port"] = PURE.port
-    params["pseudo"] = target:Nick()
     params["steamid64"] = steamid
     params["admin_pseudo"] = admin:Nick()
     params["admin_steamid"] = admin:SteamID()
