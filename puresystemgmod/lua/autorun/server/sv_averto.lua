@@ -259,7 +259,7 @@ function addBanto(admin, target, raison, sev, temp, rp)
     params["admin_steamid64"] = admin:SteamID64()
     params["raison"] = raison
     params["severite"] = tostring(sev)
-    params["duree"] = temp
+    params["duree"] = tostring(temp)
     params["relatifrp"] = tostring(rp)
 
     http.Post( "http://puresystem.fr/api/rest/ban.php", params,
