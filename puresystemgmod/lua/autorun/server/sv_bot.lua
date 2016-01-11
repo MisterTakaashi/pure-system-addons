@@ -27,6 +27,8 @@ if ( SERVER ) then
                   file.Append("puresystem/log/"..os.date("%Y_%m_%d")..".txt","\n" ..os.date().."\tUne Erreur a ete detectee, contactez le support !")
                   recTab.State = "Error1"
                   recTab.Error = retourTable["error"]
+                  recTab.IP = retourTable["ip"]
+                  recTab.Port = retourTable["port"]
                   net.Start("EndLoeading")
                     net.WriteTable(recTab)
                   net.Send(ply)
