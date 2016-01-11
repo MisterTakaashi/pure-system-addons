@@ -13,7 +13,7 @@ if ( SERVER ) then
         local recTab = {}
 
         local params = {}
-        params["port"] = PURE.port
+        params["port"] = tostring(PURE.port)
         params["pseudo"] = pseudo
         params["steamid"] = steamid
         params["steamid64"] = steamid64
