@@ -284,6 +284,7 @@ net.Receive("EndLoeading",function(len)
 	local recTab = net.ReadTable()
 	if recTab.State == "Error1" then
 		chat.AddText(Color(255,0,0,255),"[PS] "..recTab.Error)
+		chat.AddText(Color(255,0,0,255),"[PS] IP: '"..recTab.IP .. "' Port: '" .. recTab.Port .. "'")
 	elseif recTab.State == "Error2" then
 			chat.AddText(Color(255,0,0,255),"[PS] Une erreur s'est produite lors du chargement de vos données, le serveur est-il bien reference ?")
 	else
