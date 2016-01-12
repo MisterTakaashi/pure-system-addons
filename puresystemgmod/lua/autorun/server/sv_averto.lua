@@ -172,7 +172,7 @@ end)
     end
 
     local params = {}
-    params["port"] = PURE.port
+    params["port"] = tostring(PURE.port)
     params["pseudo"] = target:Nick()
     params["steamid"] = target:SteamID()
     params["steamid64"] = target:SteamID64()
@@ -209,7 +209,7 @@ function addKickto(admin, target, raison, sev, rp)
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
     local params = {}
-    params["port"] = PURE.port
+    params["port"] = tostring(PURE.port)
     params["pseudo"] = target:Nick()
     params["steamid"] = target:SteamID()
     params["steamid64"] = target:SteamID64()
@@ -250,7 +250,7 @@ function addBanto(admin, target, raison, sev, temp, rp)
     if (tostring(rp) == "true") then rp = 1 else rp = 0 end
 
     local params = {}
-    params["port"] = PURE.port
+    params["port"] = tostring(PURE.port)
     params["pseudo"] = target:Nick()
     params["steamid"] = target:SteamID()
     params["steamid64"] = target:SteamID64()
@@ -295,7 +295,7 @@ function addBantoSteamID(admin, steamid, raison, sev, temp, rp)
     print("Je demande la page: \n\nhttp://puresystem.fr/api/rest/ban.php?port="..PURE.port.."&steamid64=".. steamid .."&admin_pseudo=".. admin:Nick() .."&admin_steamid=".. admin:SteamID() .."&admin_steamid64=".. admin:SteamID64() .."&raison=".. raison .."&severite=".. sev .."&duree=".. temp .."&relatifrp=".. tostring(rp) .."")
 
     local params = {}
-    params["port"] = PURE.port
+    params["port"] = tostring(PURE.port)
     params["steamid64"] = steamid
     params["admin_pseudo"] = admin:Nick()
     params["admin_steamid"] = admin:SteamID()
@@ -343,7 +343,7 @@ function addAFKick(admin,target,raison)
     if !(table.HasValue(PURE.authgrp, admin:GetUserGroup())) then return end
 
     local params = {}
-    params["port"] = PURE.port
+    params["port"] = tostring(PURE.port)
     params["pseudo"] = target:Nick()
     params["steamid"] = target:SteamID()
     params["steamid64"] = target:SteamID64()
@@ -369,7 +369,7 @@ end
 
 function getNewreput(target)
     local params = {}
-    params["port"] = PURE.port
+    params["port"] = tostring(PURE.port)
     params["pseudo"] = target:Nick()
     params["steamid"] = target:SteamID()
     params["steamid64"] = target:SteamID64()
