@@ -1,3 +1,6 @@
+# ATTENTION
+Cette version de l'addon n'est maintenant plus supportée ! Le nouvel addon est téléchargeable via votre page de sevreur sur https://puresystem.eu. Il est développé de manière privée sur un autre repo. Merci de votre compréhension :smile: 
+
 # Pure System Addons
 Ce répo concerne uniquement les parties serveur du Pure System, la partie Web et l'API sont maintenant développées en privé. Il s'agit là de la version de l'addon qui est installée sur les serveurs membres du Pure System.
 
