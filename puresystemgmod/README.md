@@ -29,3 +29,16 @@ Attention, seuls les serveurs enregistrés et possédant l'autorisation de se se
 - [Achild0](http://steamcommunity.com/id/Achild0/)
 
 En cas de soucis, contactez l'une de ces deux personnes.
+
+
+
+### Todo
+
+
+Keep only one file in autorun, call it sh_puresystem.lua
+
+move everything from lua/autorun/*1/*x to lua/puresystem/*1/*x to prevent name conflicts with others addons
+
+stop creating funcs in _G
+
+when creating hooks, call them PS_yourname, not just yourname to prevent conflicts
