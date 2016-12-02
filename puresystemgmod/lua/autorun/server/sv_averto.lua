@@ -11,12 +11,6 @@ util.AddNetworkString( "sunfrezz" )
 util.AddNetworkString( "avertgot" )
 
 
-
-for k,v in pairs(player.GetAll()) do
-    v:SetNWBool("freezed",false)
-    v:SetNWBool("jailed",false)
-end
-
 local PureLog = "puresystem/log/"..os.date("%Y_%m_%d")..".txt"
 
 local function AJail(ply,ajtime)
